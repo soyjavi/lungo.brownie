@@ -67,7 +67,7 @@ article{visibility:hidden;display:none;}
 .list li.thumb img,.list li.thumb .icon{margin-top:-14px;height:61px;width:61px;font-size:3.6em;line-height:1.3em}
 .list li.anchor{padding:5.6px 11.2px;line-height:1em;}
 .list li.anchor .tag{display:none}
-.list li strong,.list li small{padding-left:11.2px}
+.list li strong,.list li small,.list li .text{padding-left:11.2px}
 .list li .right{margin-right:11.2px}
 .list li strong{position:relative;font-size:1.2em;font-weight:400}
 .list li small{display:block;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;}
@@ -77,20 +77,20 @@ article{visibility:hidden;display:none;}
 .list .right .icon,.list small .icon{height:13px !important;width:13px !important;margin-right:1px !important;font-size:1.2em !important;line-height:1.1em}
 .list.indented li{margin-bottom:10px}
 
-nav.groupbar,footer nav{display:-webkit-box;display:-moz-box;display:-ms-box;display:-o-box;display:box;-webkit-box-pack:justify;-moz-box-pack:justify;-ms-box-pack:justify;-o-box-pack:justify;box-pack:justify;width:100%;}
-nav.groupbar > a,footer nav > a{-webkit-box-flex:1;-moz-box-flex:1;-ms-box-flex:1;-o-box-flex:1;box-flex:1;text-decoration:none}
-header nav a{padding:0 11px !important;float:left}
-header nav .button,header nav button{margin:6px 2px 0 2px;line-height:31px !important;}
+header nav a,header nav button{padding:0 11px !important;float:left}
+header nav .button,header nav button{margin:6px 0 0 0;line-height:32px;}
 header nav .button > .icon,header nav button > .icon{font-size:1.5em;position:relative;top:3px;height:20px;width:20px;line-height:20px;display:inline-block}
-header nav.right a.button,header nav .right button{margin-right:6px}
-header nav:not(.right) a.button,header nav :not(.right) button{margin-left:6px}
+header nav.right .button,header nav button{margin-right:6px}
+header nav:not(.right) .button,header nav button{margin-left:6px}
 header nav a:not(.button){height:44px;}
 header nav a:not(.button) > .icon{font-size:1.8em}
 header nav .tag{position:relative;top:-12px;left:-12px;margin-right:-20px}
-header nav abbr{font-size:.9em;font-weight:700}
-header nav .icon ~ abbr{margin-left:4px;float:right}
+header nav abbr{font-size:.9em;font-weight:700;display:block}
+header nav .icon ~ abbr{margin-left:4px}
 header nav .loading{margin-top:.5em;font-size:1.6em;}
 header nav .loading + .icon{display:none}
+nav.groupbar,footer nav{display:-webkit-box;display:-moz-box;display:-ms-box;display:-o-box;display:box;-webkit-box-pack:justify;-moz-box-pack:justify;-ms-box-pack:justify;-o-box-pack:justify;box-pack:justify;width:100%;}
+nav.groupbar > a,footer nav > a{-webkit-box-flex:1;-moz-box-flex:1;-ms-box-flex:1;-o-box-flex:1;box-flex:1;text-decoration:none}
 nav.groupbar{height:32px;width:100%;z-index:2;line-height:32px;}
 nav.groupbar > a{padding:0;margin:0;height:32px !important;display:block;text-align:center;}
 nav.groupbar > a .icon{font-size:1em;margin-right:2px}
