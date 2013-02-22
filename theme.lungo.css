@@ -43,7 +43,7 @@ section > header {
   border-radius: 4px 4px 0 0;
 }
 section > footer,
-section nav.groupbar {
+section nav[data-control=groupbar] {
   background-color: #222;
   -webkit-box-shadow: inset 0 3px 0 #1d1d1d;
   -moz-box-shadow: inset 0 3px 0 #1d1d1d;
@@ -101,7 +101,7 @@ section > header > nav a:not(.button) {
 section > header > nav a:not(.button):active {
   color: #004a6b;
 }
-section > nav.groupbar > a.active {
+section > nav[data-control=groupbar] > a.active {
   -webkit-box-shadow: inset 0 -3px 0 #0093d5;
   -moz-box-shadow: inset 0 -3px 0 #0093d5;
   -ms-box-shadow: inset 0 -3px 0 #0093d5;
@@ -109,11 +109,11 @@ section > nav.groupbar > a.active {
   box-shadow: inset 0 -3px 0 #0093d5;
 }
 section > footer > nav > a,
-nav.groupbar > a {
+nav[data-control=groupbar] > a {
   color: #888;
 }
 section > footer > nav > a.active,
-nav.groupbar > a.active {
+nav[data-control=groupbar] > a.active {
   color: #fff;
 }
 section > footer > nav > a {
@@ -146,23 +146,41 @@ nav[data-control=menu] {
   -o-box-shadow: 0 2px 0 rgba(0,0,0,0.15);
   box-shadow: 0 2px 0 rgba(0,0,0,0.15);
 }
-nav[data-control=menu] > a {
+nav[data-control=menu].icons {
+  background: rgba(0,0,0,0.8);
+}
+nav[data-control=menu].icons > a {
+  color: #6f6f6f;
+}
+nav[data-control=menu].icons > a:active > .icon {
+  -webkit-text-shadow: 0 0 32px #fff;
+  -moz-text-shadow: 0 0 32px #fff;
+  -ms-text-shadow: 0 0 32px #fff;
+  -o-text-shadow: 0 0 32px #fff;
+  text-shadow: 0 0 32px #fff;
+}
+nav[data-control=menu].icons > a > .icon {
+  color: #fff;
+}
+nav[data-control=menu]:not(.icons) > a {
   color: #fff;
   -webkit-text-shadow: 0 1px 0 #111;
   -moz-text-shadow: 0 1px 0 #111;
   -ms-text-shadow: 0 1px 0 #111;
   -o-text-shadow: 0 1px 0 #111;
   text-shadow: 0 1px 0 #111;
-  font-weight: 700;
   border-bottom: 1px solid #141414;
   border-top: 1px solid #2d2d2d;
 }
-nav[data-control=menu] > a:active {
+nav[data-control=menu]:not(.icons) > a:active {
   background: #111;
   border-color: transparent;
 }
-nav[data-control=menu] > a > .icon {
+nav[data-control=menu]:not(.icons) > a > .icon {
   color: #595959;
+}
+nav[data-control=menu] > a {
+  font-weight: 700;
 }
 /* -------------------------- LISTS -------------------------- */
 section .list li {

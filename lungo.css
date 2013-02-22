@@ -19,7 +19,7 @@ section{z-index:3;width:inherit;}
 section:not(.show){z-index:2}
 aside{min-width:264px;display:none;z-index:-1;}
 aside.active{display:-webkit-box;display:-moz-box;display:-ms-box;display:-o-box;display:box}
-aside.show{z-index:1}
+aside.show{z-index:2}
 aside.right{right:0}
 header,footer{height:44px;line-height:44px;}
 header > nav,footer > nav{-webkit-box-flex:0;-moz-box-flex:0;-ms-box-flex:0;-o-box-flex:0;box-flex:0}
@@ -58,17 +58,15 @@ article{visibility:hidden;display:none;}
 [class*="column"] + [class*="column"]:last-child{float:right}
 [class*="column"] + [class*="column"].end{float:left}
 
-.list li{list-style-type:none;padding:14px 0 13px 0;position:relative;}
+.list li{list-style-type:none;padding:14px 11.2px 13px 11.2px;position:relative;}
 .list li,.list li a,.list li small,.list li .right{font-weight:300}
 .list li.arrow::after{position:absolute;right:14px;top:45%;width:6px;height:6px;content:'';border-right:3px solid;border-top:3px solid;-webkit-transform:rotate(45deg);-moz-transform:rotate(45deg);-ms-transform:rotate(45deg);-o-transform:rotate(45deg);transform:rotate(45deg)}
 .list li a{display:block;text-decoration:none}
-.list li img,.list li .icon{float:left;line-height:1em;text-align:center}
-.list li:not(.thumb) img,.list li:not(.thumb) .icon{margin-left:11.2px;width:34px;height:34px;font-size:2.6em}
-.list li.thumb img,.list li.thumb .icon{margin-top:-14px;height:61px;width:61px;font-size:3.6em;line-height:1.3em}
+.list li img,.list li .icon{float:left;line-height:1em;text-align:center;margin-right:11.2px}
+.list li:not(.thumb) img,.list li:not(.thumb) .icon{width:34px;height:34px;font-size:2.6em}
+.list li.thumb img,.list li.thumb .icon{margin-top:-14px;margin-left:-11.2px;height:60px;width:60px;font-size:3.6em;line-height:1.3em}
 .list li.anchor{padding:5.6px 11.2px;line-height:1em;}
 .list li.anchor .tag{display:none}
-.list li strong,.list li small,.list li .text{padding-left:11.2px}
-.list li .right{margin-right:11.2px}
 .list li strong{position:relative;font-size:1.2em;font-weight:400}
 .list li small{display:block;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;}
 .list li small + .right{margin-left:0;margin-top:-12px}
@@ -89,12 +87,20 @@ header nav abbr{font-size:.9em;font-weight:700;display:block}
 header nav .icon ~ abbr{margin-left:4px}
 header nav .loading{margin-top:.5em;font-size:1.6em;}
 header nav .loading + .icon{display:none}
-nav.groupbar,footer nav{display:-webkit-box;display:-moz-box;display:-ms-box;display:-o-box;display:box;-webkit-box-pack:justify;-moz-box-pack:justify;-ms-box-pack:justify;-o-box-pack:justify;box-pack:justify;width:100%;}
-nav.groupbar > a,footer nav > a{-webkit-box-flex:1;-moz-box-flex:1;-ms-box-flex:1;-o-box-flex:1;box-flex:1;text-decoration:none}
-nav.groupbar{height:32px;width:100%;z-index:2;line-height:32px;}
-nav.groupbar > a{padding:0;margin:0;height:32px !important;display:block;text-align:center;}
-nav.groupbar > a .icon{font-size:1em;margin-right:2px}
-nav.groupbar > a .tag{position:relative;top:-1px;left:2px}
+nav[data-control=groupbar],footer nav{display:-webkit-box;display:-moz-box;display:-ms-box;display:-o-box;display:box;-webkit-box-pack:justify;-moz-box-pack:justify;-ms-box-pack:justify;-o-box-pack:justify;box-pack:justify;width:100%;}
+nav[data-control=groupbar] > a,footer nav > a{-webkit-box-flex:1;-moz-box-flex:1;-ms-box-flex:1;-o-box-flex:1;box-flex:1;text-decoration:none}
+nav[data-control=groupbar]{height:32px;width:100%;z-index:2;line-height:32px;}
+nav[data-control=groupbar] > a{padding:0;margin:0;height:32px !important;display:block;text-align:center;}
+nav[data-control=groupbar] > a .icon{font-size:1em;margin-right:2px}
+nav[data-control=groupbar] > a .tag{position:relative;top:-1px;left:2px}
+nav[data-control=menu]{position:absolute;left:0;top:44px;visibility:hidden;z-index:2;width:inherit;text-align:center;-webkit-transform:translateY(-120%);-moz-transform:translateY(-120%);-ms-transform:translateY(-120%);-o-transform:translateY(-120%);transform:translateY(-120%);-webkit-transition-property:transform;-moz-transition-property:transform;-ms-transition-property:transform;-o-transition-property:transform;transition-property:transform;-webkit-transition-duration:400ms;-moz-transition-duration:400ms;-ms-transition-duration:400ms;-o-transition-duration:400ms;transition-duration:400ms;-webkit-transition-timing-function:easeOutSine;-moz-transition-timing-function:easeOutSine;-ms-transition-timing-function:easeOutSine;-o-transition-timing-function:easeOutSine;transition-timing-function:easeOutSine;-webkit-backface-visibility:hidden;-moz-backface-visibility:hidden;-ms-backface-visibility:hidden;-o-backface-visibility:hidden;backface-visibility:hidden;}
+nav[data-control=menu].show{visibility:visible;-webkit-transform:translateY(0%);-moz-transform:translateY(0%);-ms-transform:translateY(0%);-o-transform:translateY(0%);transform:translateY(0%)}
+nav[data-control=menu].icons{font-size:11px;}
+nav[data-control=menu].icons > a{width:25%;float:left;padding:10px 0;}
+nav[data-control=menu].icons > a > .icon{font-size:32px;line-height:32px;display:block}
+nav[data-control=menu]:not(.icons){font-size:1.2em;}
+nav[data-control=menu]:not(.icons) > a{display:block;position:relative;padding:14px 11.2px 13px 11.2px;}
+nav[data-control=menu]:not(.icons) > a > .icon{position:absolute;left:.5em;font-size:1.5em}
 footer nav a{text-align:center;display:block;padding:0;height:44px}
 footer nav .icon{font-size:2em !important;line-height:44px;width:32px;display:inline-block}
 footer nav .tag{top:-42px;left:4px;}
@@ -103,11 +109,6 @@ footer nav abbr{display:none}
 footer nav .tag{position:relative;top:-12px;left:-12px;margin-right:-20px}
 footer nav.with-labels .icon{line-height:36px}
 footer nav.with-labels abbr{display:block !important;margin-top:-8px;z-index:1;font-size:11px;line-height:14px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
-nav[data-control=menu]{position:absolute;left:0;top:44px;visibility:hidden;z-index:2;width:inherit;font-size:1.2em;text-align:center;-webkit-transform:translateY(-120%);-moz-transform:translateY(-120%);-ms-transform:translateY(-120%);-o-transform:translateY(-120%);transform:translateY(-120%);-webkit-transition-property:transform;-moz-transition-property:transform;-ms-transition-property:transform;-o-transition-property:transform;transition-property:transform;-webkit-transition-duration:400ms;-moz-transition-duration:400ms;-ms-transition-duration:400ms;-o-transition-duration:400ms;transition-duration:400ms;-webkit-transition-timing-function:easeOutSine;-moz-transition-timing-function:easeOutSine;-ms-transition-timing-function:easeOutSine;-o-transition-timing-function:easeOutSine;transition-timing-function:easeOutSine;-webkit-backface-visibility:hidden;-moz-backface-visibility:hidden;-ms-backface-visibility:hidden;-o-backface-visibility:hidden;backface-visibility:hidden;}
-nav[data-control=menu].show{visibility:visible;-webkit-transform:translateY(0%);-moz-transform:translateY(0%);-ms-transform:translateY(0%);-o-transform:translateY(0%);transform:translateY(0%)}
-nav[data-control=menu] > a{display:block;position:relative;padding:14px 10px;-webkit-text-shadow:0 1px 0 #111;-moz-text-shadow:0 1px 0 #111;-ms-text-shadow:0 1px 0 #111;-o-text-shadow:0 1px 0 #111;text-shadow:0 1px 0 #111;}
-nav[data-control=menu] > a:active{border-color:transparent}
-nav[data-control=menu] > a > .icon{position:absolute;left:.5em;font-size:1.5em}
 
 .overthrow-enabled .overthrow{overflow:auto;-webkit-overflow-scrolling:touch}
 .scroll{overflow-x:hidden;overflow-y:scroll;-webkit-overflow-scrolling:touch;-webkit-box-flex:1;}
@@ -125,6 +126,7 @@ nav[data-control=menu] > a > .icon{position:absolute;left:.5em;font-size:1.5em}
 .block{display:block}
 .tag{display:inline-block;padding:0 3px;font-size:11px !important;line-height:1.25em;height:1.35em;text-align:center}
 .margin.bottom{margin-bottom:5px}
+[data-view-menu]:after{content:"▼";position:relative;top:-5px;left:1px;font-size:11px}
 [data-control=carousel]{overflow:hidden;list-style:none;margin:0}
 .text.thin{font-weight:300}
 .text.normal{font-weight:400}
@@ -261,7 +263,7 @@ section.show .loading,section.active .loading,.notification .loading{-webkit-ani
 91.66%{-webkit-transform:rotate(330deg);-moz-transform:rotate(330deg);-ms-transform:rotate(330deg);-o-transform:rotate(330deg);transform:rotate(330deg)}
 100%{-webkit-transform:rotate(330deg);-moz-transform:rotate(330deg);-ms-transform:rotate(330deg);-o-transform:rotate(330deg);transform:rotate(330deg)}
 }
-.notification{position:absolute;top:0;left:0;width:100%;height:100%;z-index:3;display:none;}
+.notification{position:absolute;top:0;left:0;width:100%;height:100%;z-index:1980;display:none;}
 .notification .window{position:relative;opacity:0;-webkit-transition:all 400ms;-moz-transition:all 400ms;-ms-transition:all 400ms;-o-transition:all 400ms;transition:all 400ms;text-align:center;}
 .notification .window.show{opacity:1;-webkit-transition-delay:400ms;-moz-transition-delay:400ms;-ms-transition-delay:400ms;-o-transition-delay:400ms;transition-delay:400ms}
 .notification .window strong,.notification .window small{display:block}
