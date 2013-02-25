@@ -410,6 +410,7 @@ footer .tag:not(.icon) {
 /* -------------------------- BUTTONS -------------------------- */
 header .button,
 header button {
+  color: #fff;
   background-color: #007db5;
   -webkit-box-shadow: 0 1px 0 #03b1ff, inset 0 1px 0 #00608a;
   -moz-box-shadow: 0 1px 0 #03b1ff, inset 0 1px 0 #00608a;
@@ -460,8 +461,33 @@ article button.secondary {
   color: #666 !important;
 }
 article .button[disabled],
-article button[disabled] {
-  background-color: #000;
+article button[disabled],
+article .button :disabled,
+article button :disabled,
+article .button.disabled,
+article button.disabled {
+  background: rgba(255,255,255,0.2);
+  color: #999 !important;
+  -webkit-box-shadow: none !important;
+  -moz-box-shadow: none !important;
+  -ms-box-shadow: none !important;
+  -o-box-shadow: none !important;
+  box-shadow: none !important;
+}
+article .button,
+article button,
+article .button abbr,
+article button abbr {
+  font-weight: 700;
+}
+article .button .icon,
+article button .icon {
+  opacity: 0.65;
+  -webkit-text-shadow: 0 -1px 0 rgba(0,0,0,0.25);
+  -moz-text-shadow: 0 -1px 0 rgba(0,0,0,0.25);
+  -ms-text-shadow: 0 -1px 0 rgba(0,0,0,0.25);
+  -o-text-shadow: 0 -1px 0 rgba(0,0,0,0.25);
+  text-shadow: 0 -1px 0 rgba(0,0,0,0.25);
 }
 article button,
 article .button,
