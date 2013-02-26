@@ -25,10 +25,10 @@ body .theme:active {
   background-color: #0093d5;
 }
 /* -------------------------- LAYOUT COLORS -------------------------- */
-section {
+body > section {
   background-color: #222;
 }
-section > header {
+body > section > header {
   background-color: #0093d5;
   -webkit-box-shadow: 0 2px 0 rgba(0,0,0,0.15), inset 0 1px 0 #03b1ff, inset 0 -1px 0 #007db5;
   -moz-box-shadow: 0 2px 0 rgba(0,0,0,0.15), inset 0 1px 0 #03b1ff, inset 0 -1px 0 #007db5;
@@ -42,8 +42,8 @@ section > header {
   -o-border-radius: 4px 4px 0 0;
   border-radius: 4px 4px 0 0;
 }
-section > footer,
-section nav[data-control=groupbar] {
+body > section > footer,
+body > section nav[data-control=groupbar] {
   background-color: #222;
   -webkit-box-shadow: inset 0 3px 0 #1d1d1d;
   -moz-box-shadow: inset 0 3px 0 #1d1d1d;
@@ -51,38 +51,38 @@ section nav[data-control=groupbar] {
   -o-box-shadow: inset 0 3px 0 #1d1d1d;
   box-shadow: inset 0 3px 0 #1d1d1d;
 }
-section > article,
-section > [data-control="pull"] {
+body > section > article,
+body > section > [data-control="pull"] {
   background-color: #f4f5f5;
 }
-section > article.splash,
-section > [data-control="pull"].splash {
-  background: #222;
+body > section > article.splash,
+body > section > [data-control="pull"].splash {
+  background: #0093d5;
   color: #fff;
 }
-section.aside {
+body > section.aside {
   -webkit-box-shadow: -1px 0 2px rgba(0,0,0,0.2);
   -moz-box-shadow: -1px 0 2px rgba(0,0,0,0.2);
   -ms-box-shadow: -1px 0 2px rgba(0,0,0,0.2);
   -o-box-shadow: -1px 0 2px rgba(0,0,0,0.2);
   box-shadow: -1px 0 2px rgba(0,0,0,0.2);
 }
-section.aside.right {
+body > section.aside.right {
   -webkit-box-shadow: 1px 0 2px rgba(0,0,0,0.2);
   -moz-box-shadow: 1px 0 2px rgba(0,0,0,0.2);
   -ms-box-shadow: 1px 0 2px rgba(0,0,0,0.2);
   -o-box-shadow: 1px 0 2px rgba(0,0,0,0.2);
   box-shadow: 1px 0 2px rgba(0,0,0,0.2);
 }
-aside {
+body > aside {
   background-color: #1d1d1d;
   color: #fff;
 }
-aside > header,
-aside > footer {
+body > aside > header,
+body > aside > footer {
   background-color: #181818;
 }
-aside > header {
+body > aside > header {
   -webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.25), inset 0 1px 0 #222, inset 0 -1px 0 #141414;
   -moz-box-shadow: 0 1px 3px rgba(0,0,0,0.25), inset 0 1px 0 #222, inset 0 -1px 0 #141414;
   -ms-box-shadow: 0 1px 3px rgba(0,0,0,0.25), inset 0 1px 0 #222, inset 0 -1px 0 #141414;
@@ -429,12 +429,7 @@ header button:active {
 }
 article .button,
 article button {
-  -webkit-border-radius: FORM-border-radius;
-  -moz-border-radius: FORM-border-radius;
-  -ms-border-radius: FORM-border-radius;
-  -o-border-radius: FORM-border-radius;
-  border-radius: FORM-border-radius;
-  color: #fff;
+  color: #fff !important;
   -webkit-border-radius: 2px;
   -moz-border-radius: 2px;
   -ms-border-radius: 2px;
@@ -510,6 +505,20 @@ article .tag:not(.icon).cancel {
   background-color: #ee6557;
 }
 /* -------------------------- FORMS -------------------------- */
+.splash fieldset:first-child {
+  -webkit-border-radius: 2px 2px 0px 0px;
+  -moz-border-radius: 2px 2px 0px 0px;
+  -ms-border-radius: 2px 2px 0px 0px;
+  -o-border-radius: 2px 2px 0px 0px;
+  border-radius: 2px 2px 0px 0px;
+}
+.splash fieldset:last-child {
+  -webkit-border-radius: 0px 0px 2px 2px;
+  -moz-border-radius: 0px 0px 2px 2px;
+  -ms-border-radius: 0px 0px 2px 2px;
+  -o-border-radius: 0px 0px 2px 2px;
+  border-radius: 0px 0px 2px 2px;
+}
 form label,
 .form label {
   color: #aaa;
@@ -550,17 +559,6 @@ form textarea,
 .form textarea {
   background-color: #fff;
   color: rgba(0,0,0,0.75);
-  border: 1px solid #ddd;
-  -webkit-box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
-  -moz-box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
-  -ms-box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
-  -o-box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
-  box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
-  -webkit-border-radius: 0px;
-  -moz-border-radius: 0px;
-  -ms-border-radius: 0px;
-  -o-border-radius: 0px;
-  border-radius: 0px;
 }
 form input[type="text"].error,
 .form input[type="text"].error,
@@ -610,9 +608,9 @@ form select:required,
 .form select:required,
 form textarea:required,
 .form textarea:required {
-  border-color: color_alert;
-  color: color_alert;
-  background-color: rgba(198,15,19,0.1);
+  color: #ee6557;
+  background-color: #fbd9d5;
+  font-weight: 700;
 }
 form input[type="text"]:focus,
 .form input[type="text"]:focus,
@@ -637,10 +635,56 @@ form input[type="url"]:focus,
 form select:focus,
 .form select:focus,
 form textarea:focus,
-.form textarea:focus {
-  background: #fafafa;
-  border-color: #0093d5;
-  color: rgba(0,0,0,0.75);
+.form textarea:focus,
+form input[type="text"]:active,
+.form input[type="text"]:active,
+form input[type="password"]:active,
+.form input[type="password"]:active,
+form input[type="date"]:active,
+.form input[type="date"]:active,
+form input[type="datetime"]:active,
+.form input[type="datetime"]:active,
+form input[type="email"]:active,
+.form input[type="email"]:active,
+form input[type="number"]:active,
+.form input[type="number"]:active,
+form input[type="search"]:active,
+.form input[type="search"]:active,
+form input[type="tel"]:active,
+.form input[type="tel"]:active,
+form input[type="time"]:active,
+.form input[type="time"]:active,
+form input[type="url"]:active,
+.form input[type="url"]:active,
+form select:active,
+.form select:active,
+form textarea:active,
+.form textarea:active,
+form input[type="text"]:hover,
+.form input[type="text"]:hover,
+form input[type="password"]:hover,
+.form input[type="password"]:hover,
+form input[type="date"]:hover,
+.form input[type="date"]:hover,
+form input[type="datetime"]:hover,
+.form input[type="datetime"]:hover,
+form input[type="email"]:hover,
+.form input[type="email"]:hover,
+form input[type="number"]:hover,
+.form input[type="number"]:hover,
+form input[type="search"]:hover,
+.form input[type="search"]:hover,
+form input[type="tel"]:hover,
+.form input[type="tel"]:hover,
+form input[type="time"]:hover,
+.form input[type="time"]:hover,
+form input[type="url"]:hover,
+.form input[type="url"]:hover,
+form select:hover,
+.form select:hover,
+form textarea:hover,
+.form textarea:hover {
+  color: #007db5;
 }
 form input[type="text"][disabled],
 .form input[type="text"][disabled],
@@ -666,24 +710,47 @@ form select[disabled],
 .form select[disabled],
 form textarea[disabled],
 .form textarea[disabled] {
-  background: #eee;
-  border-color: #aaa;
+  background: #cecece;
   color: #999;
+}
+form input[type="text"].large,
+.form input[type="text"].large,
+form input[type="password"].large,
+.form input[type="password"].large,
+form input[type="date"].large,
+.form input[type="date"].large,
+form input[type="datetime"].large,
+.form input[type="datetime"].large,
+form input[type="email"].large,
+.form input[type="email"].large,
+form input[type="number"].large,
+.form input[type="number"].large,
+form input[type="search"].large,
+.form input[type="search"].large,
+form input[type="tel"].large,
+.form input[type="tel"].large,
+form input[type="time"].large,
+.form input[type="time"].large,
+form input[type="url"].large,
+.form input[type="url"].large,
+form select.large,
+.form select.large,
+form textarea.large,
+.form textarea.large {
+  font-weight: 700;
 }
 form .select:after,
 .form .select:after {
-  background: #d0d4c6;
+  background: #cecece;
   color: #fff;
-  border-top-right-radius: 1px;
-  border-bottom-right-radius: 1px;
 }
 form input[type=range],
 .form input[type=range] {
-  -webkit-box-shadow: 'inset 0 1px 2px rgba(0,0,0,0.1)';
-  -moz-box-shadow: 'inset 0 1px 2px rgba(0,0,0,0.1)';
-  -ms-box-shadow: 'inset 0 1px 2px rgba(0,0,0,0.1)';
-  -o-box-shadow: 'inset 0 1px 2px rgba(0,0,0,0.1)';
-  box-shadow: 'inset 0 1px 2px rgba(0,0,0,0.1)';
+  -webkit-border-radius: 0px;
+  -moz-border-radius: 0px;
+  -ms-border-radius: 0px;
+  -o-border-radius: 0px;
+  border-radius: 0px;
 }
 form input[type=range]:not(.checkbox),
 .form input[type=range]:not(.checkbox) {
@@ -710,12 +777,12 @@ form input[type=range]::-webkit-slider-thumb,
   -ms-border-radius: 2px;
   -o-border-radius: 2px;
   border-radius: 2px;
-  background-color: #e7eae2;
-  border: solid 1px #d0d4c6;
+  background-color: #f2f2f2;
+  border: solid 1px #e5e5e5;
 }
 form input[type=range]::-webkit-slider-thumb::after,
 .form input[type=range]::-webkit-slider-thumb::after {
-  background: #d0d4c6;
+  background: #e5e5e5;
 }
 form .progress .bar,
 .form .progress .bar {
