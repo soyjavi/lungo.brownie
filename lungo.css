@@ -10,6 +10,8 @@ table{border-collapse:collapse;border-spacing:0}
 th,td,caption{vertical-align:top;text-align:left}
 
 body,html{height:100%;width:100%;margin:0;padding:0;overflow:hidden}
+body[data-position="absolute"] > section{position:absolute}
+body[data-position="fixed"] > section{position:fixed}
 body > aside,body > section{display:-webkit-box;display:-moz-box;display:-ms-box;display:-o-box;display:box;-webkit-box-orient:vertical;-moz-box-orient:vertical;-ms-box-orient:vertical;-o-box-orient:vertical;box-orient:vertical;height:inherit;}
 body > aside > header,body > section > header,body > aside > footer,body > section > footer{-webkit-box-flex:0;-moz-box-flex:0;-ms-box-flex:0;-o-box-flex:0;box-flex:0;z-index:3;position:relative}
 body > aside > header,body > section > header{-webkit-box-ordinal-group:1;-moz-box-ordinal-group:1;-ms-box-ordinal-group:1;-o-box-ordinal-group:1;box-ordinal-group:1}
@@ -90,7 +92,7 @@ footer nav.with-labels abbr{display:block !important;margin-top:-8px;z-index:1;f
 .hidden{display:none}
 .block{display:block}
 .indented > *{padding:3%}
-.tag{display:inline-block;padding:0 3px;font-size:11px !important;line-height:1.25em;height:1.35em;text-align:center}
+.tag{display:inline-block;padding:0 3px;font-size:11px;line-height:1.25em;height:1.35em;text-align:center}
 .margin.bottom{margin-bottom:5px}
 .layout{display:-webkit-box;display:-moz-box;display:-ms-box;display:-o-box;display:box;height:inherit !important;}
 .layout:not(.horizontal){-webkit-box-orient:vertical;-moz-box-orient:vertical;-ms-box-orient:vertical;-o-box-orient:vertical;box-orient:vertical}
@@ -279,9 +281,7 @@ body > section > article.splash .copyright{position:absolute;width:100%;bottom:8
 .text.big{font-size:1.2em}
 .text.opacity{opacity:.5}
 
-@media only screen and (max-width: 767px){body[data-position="absolute"] > section{position:absolute}
-body[data-position="fixed"] > section{position:fixed}
-body > aside{position:absolute}
+@media only screen and (max-width: 767px){body > aside{position:absolute}
 body > section.show.aside:not(.right){-webkit-transform:translateX(264px);-moz-transform:translateX(264px);-ms-transform:translateX(264px);-o-transform:translateX(264px);transform:translateX(264px)}
 body > section.show.aside.right{-webkit-transform:translateX(-264px);-moz-transform:translateX(-264px);-ms-transform:translateX(-264px);-o-transform:translateX(-264px);transform:translateX(-264px)}
 body > section.show.hide{z-index:-1}
