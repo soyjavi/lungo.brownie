@@ -10,8 +10,6 @@ table{border-collapse:collapse;border-spacing:0}
 th,td,caption{vertical-align:top;text-align:left}
 
 body,html{height:100%;width:100%;margin:0;padding:0;overflow:hidden}
-body[data-position="absolute"] > section{position:absolute}
-body[data-position="fixed"] > section{position:fixed}
 body > aside,body > section{display:-webkit-box;display:-moz-box;display:-ms-box;display:-o-box;display:box;-webkit-box-orient:vertical;-moz-box-orient:vertical;-ms-box-orient:vertical;-o-box-orient:vertical;box-orient:vertical;height:inherit;}
 body > aside > header,body > section > header,body > aside > footer,body > section > footer{-webkit-box-flex:0;-moz-box-flex:0;-ms-box-flex:0;-o-box-flex:0;box-flex:0;z-index:3;position:relative}
 body > aside > header,body > section > header{-webkit-box-ordinal-group:1;-moz-box-ordinal-group:1;-ms-box-ordinal-group:1;-o-box-ordinal-group:1;box-ordinal-group:1}
@@ -19,7 +17,7 @@ body > aside > article,body > section > article{-webkit-box-flex:1;-moz-box-flex
 body > aside > footer,body > section > footer{-webkit-box-ordinal-group:3;-moz-box-ordinal-group:3;-ms-box-ordinal-group:3;-o-box-ordinal-group:3;box-ordinal-group:3}
 body > aside > header,body > section > header,body > aside > footer,body > section > footer{height:44px;line-height:44px;}
 body > aside > header > nav,body > section > header > nav,body > aside > footer > nav,body > section > footer > nav{-webkit-box-flex:0;-moz-box-flex:0;-ms-box-flex:0;-o-box-flex:0;box-flex:0}
-body > aside > header > .title,body > section > header > .title,body > aside > footer > .title,body > section > footer > .title{z-index:-1;margin:0 4px;float:left;font-size:1.44em;-webkit-box-flex:1;-moz-box-flex:1;-ms-box-flex:1;-o-box-flex:1;box-flex:1;}
+body > aside > header > .title,body > section > header > .title,body > aside > footer > .title,body > section > footer > .title{z-index:-1;margin:0 4px;float:left;font-size:1.4em;-webkit-box-flex:1;-moz-box-flex:1;-ms-box-flex:1;-o-box-flex:1;box-flex:1;}
 body > aside > header > .title.centered,body > section > header > .title.centered,body > aside > footer > .title.centered,body > section > footer > .title.centered{position:absolute;left:32px;right:32px;text-align:center;display:inline-block}
 body > aside > header > img.title,body > section > header > img.title,body > aside > footer > img.title,body > section > footer > img.title{height:26px;margin:9px auto}
 body > aside > article,body > section > article{visibility:hidden;display:none}
@@ -38,7 +36,7 @@ body > aside.right{right:0}
 .list li a{display:block;text-decoration:none}
 .list li img,.list li .icon{float:left;line-height:1em;text-align:center;margin-right:11.2px}
 .list li:not(.thumb) img,.list li:not(.thumb) .icon{width:34px;height:34px;font-size:2.6em}
-.list li.thumb img,.list li.thumb .icon{margin-top:-14px;margin-left:-11.2px;height:60px;width:60px;font-size:3.6em;line-height:1.3em}
+.list li.thumb img,.list li.thumb .icon{margin-top:-14px;margin-left:-11.2px;height:61px;width:61px;font-size:3.6em;line-height:1.3em}
 .list li.anchor{padding:5.6px 11.2px;line-height:1em;}
 .list li.anchor .tag{display:none}
 .list li strong{position:relative;font-size:1.2em;font-weight:400}
@@ -65,7 +63,7 @@ nav[data-control=groupbar]{height:32px;width:100%;z-index:2;line-height:32px;}
 nav[data-control=groupbar] > a{padding:0;margin:0;height:32px !important;display:block;text-align:center;}
 nav[data-control=groupbar] > a .icon{font-size:1em;margin-right:2px}
 nav[data-control=groupbar] > a .tag{position:relative;top:-1px;left:2px}
-nav[data-control=menu]{position:absolute;left:0;top:44px;visibility:hidden;z-index:2;width:inherit;text-align:center;-webkit-transform:translateY(-120%);-moz-transform:translateY(-120%);-ms-transform:translateY(-120%);-o-transform:translateY(-120%);transform:translateY(-120%);-webkit-transition-property:transform;-moz-transition-property:transform;-ms-transition-property:transform;-o-transition-property:transform;transition-property:transform;-webkit-transition-duration:400ms;-moz-transition-duration:400ms;-ms-transition-duration:400ms;-o-transition-duration:400ms;transition-duration:400ms;-webkit-transition-timing-function:easeOutSine;-moz-transition-timing-function:easeOutSine;-ms-transition-timing-function:easeOutSine;-o-transition-timing-function:easeOutSine;transition-timing-function:easeOutSine;-webkit-backface-visibility:hidden;-moz-backface-visibility:hidden;-ms-backface-visibility:hidden;-o-backface-visibility:hidden;backface-visibility:hidden;}
+nav[data-control=menu]{position:absolute;left:0;top:44px;visibility:hidden;z-index:2;width:100%;text-align:center;-webkit-transform:translateY(-120%);-moz-transform:translateY(-120%);-ms-transform:translateY(-120%);-o-transform:translateY(-120%);transform:translateY(-120%);-webkit-transition-property:transform;-moz-transition-property:transform;-ms-transition-property:transform;-o-transition-property:transform;transition-property:transform;-webkit-transition-duration:400ms;-moz-transition-duration:400ms;-ms-transition-duration:400ms;-o-transition-duration:400ms;transition-duration:400ms;-webkit-transition-timing-function:easeOutSine;-moz-transition-timing-function:easeOutSine;-ms-transition-timing-function:easeOutSine;-o-transition-timing-function:easeOutSine;transition-timing-function:easeOutSine;-webkit-backface-visibility:hidden;-moz-backface-visibility:hidden;-ms-backface-visibility:hidden;-o-backface-visibility:hidden;backface-visibility:hidden;}
 nav[data-control=menu].show{visibility:visible;-webkit-transform:translateY(0%);-moz-transform:translateY(0%);-ms-transform:translateY(0%);-o-transform:translateY(0%);transform:translateY(0%)}
 nav[data-control=menu].icons{font-size:11px;}
 nav[data-control=menu].icons > a{width:25%;float:left;padding:10px 0;}
@@ -103,11 +101,11 @@ footer nav.with-labels abbr{display:block !important;margin-top:-8px;z-index:1;f
 [data-view-menu]:after{content:"▼";position:relative;top:-5px;left:1px;font-size:11px}
 [data-control=carousel]{overflow:hidden;list-style:none;margin:0}
 
-.button,button{display:inline-block;border:none;cursor:pointer;font-family:inherit;font-size:1.2em;text-align:center;text-decoration:none;outline:none;}
-header .button,header button{height:32px;line-height:32px;padding:0 8px;}
+.button,button{display:inline-block;border:none;cursor:pointer;font-family:inherit;text-align:center;text-decoration:none;outline:none;}
+header .button,header button{font-size:1em;height:32px;line-height:32px;padding:0 8px;}
 header .button > .icon,header button > .icon{font-size:1.3em}
-header .button .icon + abbr,header button .icon + abbr{position:relative;top:-3px;left:1px;display:inline}
-article .button,article button{height:40px;line-height:38px;padding:0 14px;}
+header .button .icon + abbr,header button .icon + abbr{position:relative;top:-2px;left:1px;display:inline}
+article .button,article button{font-size:1.2em;height:40px;line-height:38px;padding:0 14px;}
 article .button .icon + abbr,article button .icon + abbr{margin-left:6px}
 article .button:not(.anchor) .icon,article button:not(.anchor) .icon{line-height:20px}
 article .button.anchor,article button.anchor{display:block;width:100%;position:relative;}
@@ -267,7 +265,7 @@ body > section.show > [data-control="pull"].refresh > .icon{display:none}
 body > section.show > [data-control="pull"].refresh > .loading{display:inline-block}
 
 body > section > article.splash{text-align:center;padding:6%;}
-body > section > article.splash .logo{width:60%;margin:20% 0 10% 0;font-size:2.2em}
+body > section > article.splash .logo{height:20%;margin:20% 0 10% 0;font-size:2.2em}
 body > section > article.splash .button{margin-top:3%;margin-bottom:3%}
 body > section > article.splash .copyright{position:absolute;width:100%;bottom:8px;left:0;font-size:11px;padding:0}
 
@@ -287,7 +285,11 @@ body > section > article.splash .copyright{position:absolute;width:100%;bottom:8
 .text.big{font-size:1.2em}
 .text.opacity{opacity:.5}
 
-@media only screen and (max-width: 767px){body > aside{position:absolute}
+@media only screen and (max-width: 767px){body[data-position="absolute"] > section{position:absolute}
+body[data-position="fixed"] > section{position:fixed}
+body > aside{position:absolute}
+body > section{display:none;}
+body > section:not([data-transition]).show{display:block}
 body > section.show.aside:not(.right){-webkit-transform:translateX(264px);-moz-transform:translateX(264px);-ms-transform:translateX(264px);-o-transform:translateX(264px);transform:translateX(264px)}
 body > section.show.aside.right{-webkit-transform:translateX(-264px);-moz-transform:translateX(-264px);-ms-transform:translateX(-264px);-o-transform:translateX(-264px);transform:translateX(-264px)}
 body > section.show.hide{z-index:-1}
@@ -312,7 +314,7 @@ body > section{display:none;opacity:0;-webkit-box-ordinal-group:2;-moz-box-ordin
 body > section.show{-webkit-animation:showing 400ms;-moz-animation:showing 400ms;-ms-animation:showing 400ms;-o-animation:showing 400ms;animation:showing 400ms;-webkit-animation-fill-mode:forwards;-moz-animation-fill-mode:forwards;-ms-animation-fill-mode:forwards;-o-animation-fill-mode:forwards;animation-fill-mode:forwards;display:-webkit-box;display:-moz-box;display:-ms-box;display:-o-box;display:box}
 body > section.hide{-webkit-animation:hiding 400ms;-moz-animation:hiding 400ms;-ms-animation:hiding 400ms;-o-animation:hiding 400ms;animation:hiding 400ms}
 body > section:not([data-children]){-webkit-box-flex:1;-moz-box-flex:1;-ms-box-flex:1;-o-box-flex:1;box-flex:1}
-body > section[data-children]{width:25%}
+body > section[data-children]{width:320px}
 body > section [data-view-aside]{display:none !important}
 }@-webkit-keyframes showing{0%{-webkit-transform:translateX(100%);-moz-transform:translateX(100%);-ms-transform:translateX(100%);-o-transform:translateX(100%);transform:translateX(100%)}
 100%{opacity:1;-webkit-transform:translateX(0%);-moz-transform:translateX(0%);-ms-transform:translateX(0%);-o-transform:translateX(0%);transform:translateX(0%)}
