@@ -7,6 +7,7 @@
  * @author Javier Jimenez Villar <javi@tapquo.com> || @soyjavi
  */
 /* @import url("https://raw.github.com/soyjavi/CSSmethods/master/stylus/vendor.styl") */
+@import url("http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700");
 /* -------------------------- THEME -------------------------- */
 /* -------------------------- DEFAULTS -------------------------- */
 body {
@@ -53,7 +54,7 @@ body > section nav[data-control=groupbar] {
 }
 body > section > article,
 body > section > [data-control="pull"] {
-  background-color: #f4f5f5;
+  background-color: #f5f5f5;
 }
 body > section > article.splash,
 body > section > [data-control="pull"].splash {
@@ -335,6 +336,14 @@ aside .list li small,
 aside .list li .icon {
   color: #666;
 }
+/* -------------------------- PULL -------------------------- */
+[data-control="pull"] {
+  -webkit-text-shadow: 0 1px 0 #fff;
+  -moz-text-shadow: 0 1px 0 #fff;
+  -ms-text-shadow: 0 1px 0 #fff;
+  -o-text-shadow: 0 1px 0 #fff;
+  text-shadow: 0 1px 0 #fff;
+}
 /* -------------------------- TAG -------------------------- */
 .tag:not(.icon) {
   color: #fff;
@@ -357,13 +366,6 @@ footer .tag:not(.icon) {
   -ms-box-shadow: inset 0 1px 1px rgba(255,255,255,0.3), 0 1px 2px rgba(0,0,0,0.5);
   -o-box-shadow: inset 0 1px 1px rgba(255,255,255,0.3), 0 1px 2px rgba(0,0,0,0.5);
   box-shadow: inset 0 1px 1px rgba(255,255,255,0.3), 0 1px 2px rgba(0,0,0,0.5);
-}
-[data-control="pull"] {
-  -webkit-text-shadow: 0 1px 0 #fff;
-  -moz-text-shadow: 0 1px 0 #fff;
-  -ms-text-shadow: 0 1px 0 #fff;
-  -o-text-shadow: 0 1px 0 #fff;
-  text-shadow: 0 1px 0 #fff;
 }
 /* -------------------------- NOTIFICATION -------------------------- */
 .notification {
@@ -512,20 +514,6 @@ article .tag:not(.icon).cancel {
   background-color: #ee6557;
 }
 /* -------------------------- FORMS -------------------------- */
-.splash fieldset:first-child {
-  -webkit-border-radius: 2px 2px 0px 0px;
-  -moz-border-radius: 2px 2px 0px 0px;
-  -ms-border-radius: 2px 2px 0px 0px;
-  -o-border-radius: 2px 2px 0px 0px;
-  border-radius: 2px 2px 0px 0px;
-}
-.splash fieldset:last-child {
-  -webkit-border-radius: 0px 0px 2px 2px;
-  -moz-border-radius: 0px 0px 2px 2px;
-  -ms-border-radius: 0px 0px 2px 2px;
-  -o-border-radius: 0px 0px 2px 2px;
-  border-radius: 0px 0px 2px 2px;
-}
 form label,
 .form label {
   color: #aaa;
@@ -534,11 +522,39 @@ form label,
 form fieldset,
 .form fieldset {
   background: #fff;
-  border-bottom: solid 1px #eee;
+  border-bottom: 1px solid #f5f5f5;
 }
 form fieldset .icon,
 .form fieldset .icon {
   color: #ccc;
+}
+form fieldset.radius-top,
+.form fieldset.radius-top {
+  -webkit-border-radius: 4px 4px 0 0;
+  -moz-border-radius: 4px 4px 0 0;
+  -ms-border-radius: 4px 4px 0 0;
+  -o-border-radius: 4px 4px 0 0;
+  border-radius: 4px 4px 0 0;
+}
+form fieldset.radius-bottom,
+.form fieldset.radius-bottom {
+  -webkit-border-radius: 0 0 4px 4px;
+  -moz-border-radius: 0 0 4px 4px;
+  -ms-border-radius: 0 0 4px 4px;
+  -o-border-radius: 0 0 4px 4px;
+  border-radius: 0 0 4px 4px;
+}
+form fieldset.radius,
+.form fieldset.radius {
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  -ms-border-radius: 4px;
+  -o-border-radius: 4px;
+  border-radius: 4px;
+}
+form fieldset.shadow,
+.form fieldset.shadow {
+  border-bottom: 1px solid rgba(0,0,0,0.1);
 }
 form input[type="text"],
 .form input[type="text"],
@@ -566,6 +582,11 @@ form textarea,
 .form textarea {
   background-color: #fff;
   color: rgba(0,0,0,0.75);
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  -ms-border-radius: 2px;
+  -o-border-radius: 2px;
+  border-radius: 2px;
 }
 form input[type="text"].error,
 .form input[type="text"].error,
@@ -615,9 +636,9 @@ form select:required,
 .form select:required,
 form textarea:required,
 .form textarea:required {
-  color: #ee6557;
-  background-color: #fbd9d5;
-  font-weight: 700;
+  color: #ee6557 !important;
+  background-color: #fdf0ee;
+  border: solid 2px #ee6557;
 }
 form input[type="text"]:focus,
 .form input[type="text"]:focus,
@@ -717,34 +738,8 @@ form select[disabled],
 .form select[disabled],
 form textarea[disabled],
 .form textarea[disabled] {
-  background: #cecece;
+  background: #e5e5e5;
   color: #999;
-}
-form input[type="text"].large,
-.form input[type="text"].large,
-form input[type="password"].large,
-.form input[type="password"].large,
-form input[type="date"].large,
-.form input[type="date"].large,
-form input[type="datetime"].large,
-.form input[type="datetime"].large,
-form input[type="email"].large,
-.form input[type="email"].large,
-form input[type="number"].large,
-.form input[type="number"].large,
-form input[type="search"].large,
-.form input[type="search"].large,
-form input[type="tel"].large,
-.form input[type="tel"].large,
-form input[type="time"].large,
-.form input[type="time"].large,
-form input[type="url"].large,
-.form input[type="url"].large,
-form select.large,
-.form select.large,
-form textarea.large,
-.form textarea.large {
-  font-weight: 700;
 }
 form .select:after,
 .form .select:after {
@@ -784,12 +779,12 @@ form input[type=range]::-webkit-slider-thumb,
   -ms-border-radius: 2px;
   -o-border-radius: 2px;
   border-radius: 2px;
-  background-color: #f2f2f2;
-  border: solid 1px #e5e5e5;
+  background-color: #cecece;
+  border: solid 1px #cecece;
 }
 form input[type=range]::-webkit-slider-thumb::after,
 .form input[type=range]::-webkit-slider-thumb::after {
-  background: #e5e5e5;
+  background: #fff;
 }
 form .progress .bar,
 .form .progress .bar {
