@@ -716,9 +716,6 @@ Notification system in CSS3
       } else {
         _window.removeClass(STYLE.SHOW);
       }
-      _window[0].addEventListener('webkitTransitionEnd', function(event) {
-        return console.error(event);
-      });
       return setTimeout((function() {
         _window.html(html);
         return _window.attr("class", "window " + stylesheet + " show");
