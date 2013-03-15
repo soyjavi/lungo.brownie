@@ -128,6 +128,13 @@ footer nav.with-labels abbr{display:block !important;margin-top:-8px;z-index:1;f
 .layout > [data-layout=primary]{-webkit-box-flex:3;-moz-box-flex:3;-ms-box-flex:3;-o-box-flex:3;box-flex:3}
 [data-view-menu]:after{content:"▼";position:relative;top:-5px;left:1px;font-size:11px}
 [data-control=carousel]{overflow:hidden;list-style:none;margin:0}
+body > section.show > [data-control="pull"]{position:absolute;z-index:-1;top:44px;width:100%;height:80px;padding:10px 0;text-align:center;}
+body > section.show > [data-control="pull"] > .icon{display:inline-block;width:52px;height:52px;font-size:52px;line-height:52px;-webkit-transition-property:rotate,color;-moz-transition-property:rotate,color;-ms-transition-property:rotate,color;-o-transition-property:rotate,color;transition-property:rotate,color;-webkit-transition-duration:400ms;-moz-transition-duration:400ms;-ms-transition-duration:400ms;-o-transition-duration:400ms;transition-duration:400ms;-webkit-transition-timing-function:easeOutSine;-moz-transition-timing-function:easeOutSine;-ms-transition-timing-function:easeOutSine;-o-transition-timing-function:easeOutSine;transition-timing-function:easeOutSine;-webkit-backface-visibility:hidden;-moz-backface-visibility:hidden;-ms-backface-visibility:hidden;-o-backface-visibility:hidden;backface-visibility:hidden}
+body > section.show > [data-control="pull"] > .loading{display:none;left:0%}
+body > section.show > [data-control="pull"] > strong{position:relative;top:-16px;margin-left:4px;font-size:FONT_SIZE_NORMAL}
+body > section.show > [data-control="pull"].rotate > .icon{-webkit-transform:rotate(180deg);-moz-transform:rotate(180deg);-ms-transform:rotate(180deg);-o-transform:rotate(180deg);transform:rotate(180deg)}
+body > section.show > [data-control="pull"].refresh > .icon{display:none}
+body > section.show > [data-control="pull"].refresh > .loading{display:inline-block}
 body > section > article.splash{text-align:center;padding:7.5%;}
 body > section > article.splash .logo{max-width:192px;margin:20% 0 7.5% 0;font-size:2.2em}
 body > section > article.splash .button,body > section > article.splash button{margin-bottom:2%}
@@ -296,14 +303,6 @@ section.show .loading,section.active .loading,.notification .loading{-webkit-ani
 .notification .window.push .icon{font-size:1.4em;float:left;display:inline;margin-right:6px}
 .notification .window button,.notification .window .button{display:block;margin-bottom:1px;height:48px;line-height:48px;border:none;font-size:1.4em}
 .notification .window strong,.notification .window small{display:block}
-
-body > section.show > [data-control="pull"]{position:absolute;z-index:-1;top:44px;width:100%;height:80px;padding:10px 0;text-align:center;}
-body > section.show > [data-control="pull"] > .icon{display:inline-block;width:48px;height:48px;font-size:44px;line-height:48px;-webkit-transition:all 300ms;-moz-transition:all 300ms;-ms-transition:all 300ms;-o-transition:all 300ms;transition:all 300ms}
-body > section.show > [data-control="pull"] > .loading{display:none;left:0%}
-body > section.show > [data-control="pull"] > strong{position:relative;top:-16px;margin-left:4px;font-size:1.1em}
-body > section.show > [data-control="pull"].rotate > .icon{-webkit-transform:rotate(180deg);-moz-transform:rotate(180deg);-ms-transform:rotate(180deg);-o-transform:rotate(180deg);transform:rotate(180deg)}
-body > section.show > [data-control="pull"].refresh > .icon{display:none}
-body > section.show > [data-control="pull"].refresh > .loading{display:inline-block}
 
 @media only screen and (max-width: 767px){body[data-position="absolute"] > section{position:absolute}
 body[data-position="fixed"] > section{position:fixed}

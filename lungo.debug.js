@@ -54,7 +54,7 @@ Object with data-attributes (HTML5) with a special <markup>
       html: "<span class=\"tag theme count\">{{value}}</span>"
     },
     pull: {
-      selector: "section",
+      selector: "*",
       html: "<div class=\"{{value}}\" data-control=\"pull\" data-icon=\"down\" data-loading=\"black\">\n  <strong>title</strong>\n</div>"
     },
     progress: {
@@ -2272,7 +2272,7 @@ Creates a instance of Pull & Refresh Element
 
   Lungo.Element.Pull = function(element_selector, config_data) {
     var ANIMATION_TIME, CONFIG, CONFIG_BASE, CONTAINER, CURRENT_DISTANCE, ELEMENT, MAX_HEIGHT, REFRESHING, REFRESHING_HEIGHT, hide, _blockGestures, _handlePullEnd, _handlePulling, _moveElementTo, _refreshStart, _setContainerLoading, _setContainerOnPulling, _setContainerTitle;
-    REFRESHING_HEIGHT = 60;
+    REFRESHING_HEIGHT = 68;
     MAX_HEIGHT = 80;
     ANIMATION_TIME = 300;
     CURRENT_DISTANCE = 0;
