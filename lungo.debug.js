@@ -685,15 +685,20 @@ Notification system in CSS3
     /*
     */
 
-    html = function(markup, button) {
-      markup += (button ? "<a href=\"#\" class=\"button large anchor\" data-action=\"close\">" + button + "</a>" : "");
-      return _show(markup, "html");
+    html = function(markup, button, style, seconds) {
+      if (button) {
+        markup += "<a href=\"#\" class=\"button large anchor\" data-action=\"close\">" + button + "</a>";
+      }
+      _show(markup, "html " + style);
+      return _hide(seconds);
     };
     /*
     */
 
     push = function(title, icon) {
-      return _show(_markup(title, null, icon), "push", false);
+      var seconds;
+      _show(_markup(title, null, icon), "push", false);
+      return _hide(seconds = 5);
     };
     _init = function() {
       lng.dom(SELECTOR.BODY).append(MARKUP_NOTIFICATION);
@@ -705,7 +710,6 @@ Notification system in CSS3
       if (block == null) {
         block = true;
       }
-      console.error("show", _window.hasClass("show"));
       if (block) {
         _el.removeClass("push");
       } else {
