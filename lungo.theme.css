@@ -114,7 +114,8 @@ form [data-control-checkbox].icon.ok:after,.form [data-control-checkbox].icon.ok
 .notification{color:#fff;}
 .notification:not(.push){background-color:rgba(0,0,0,0.6)}
 .notification .window{-webkit-border-radius:4px;-moz-border-radius:4px;-ms-border-radius:4px;-o-border-radius:4px;border-radius:4px;}
-.notification .window.growl{background:rgba(0,0,0,0.75)}
+.notification .window.growl{background:rgba(0,0,0,0.75);}
+.notification .window.growl strong{opacity:.75;font-weight:400}
 .notification .window:not(.growl){-webkit-box-shadow:0 0 8px #444;-moz-box-shadow:0 0 8px #444;-ms-box-shadow:0 0 8px #444;-o-box-shadow:0 0 8px #444;box-shadow:0 0 8px #444;}
 .notification .window:not(.growl) button,.notification .window:not(.growl) .button{background:#fff;color:#3498db}
 .notification .window.confirm,.notification .window.html{background:#e6e6e6;color:#222}
@@ -122,8 +123,9 @@ form [data-control-checkbox].icon.ok:after,.form [data-control-checkbox].icon.ok
 .notification .window.success{background:#2ecc71}
 .notification .window.error,.notification .window.success{color:#fff;}
 .notification .window.error small,.notification .window.success small{opacity:.75;font-weight:100}
-.notification .window.html .title{background:#3498db;color:#fff}
+.notification .window.html .title{background:#3498db;color:#fff;-webkit-border-radius:4px 4px 0 0;-moz-border-radius:4px 4px 0 0;-ms-border-radius:4px 4px 0 0;-o-border-radius:4px 4px 0 0;border-radius:4px 4px 0 0}
 .notification .window.push{background:rgba(0,0,0,0.65)}
+.notification .window button:last-child,.notification .window .button:last-child{-webkit-border-radius:0 0 4px 4px;-moz-border-radius:0 0 4px 4px;-ms-border-radius:0 0 4px 4px;-o-border-radius:0 0 4px 4px;border-radius:0 0 4px 4px}
 
 .tag:not(.icon){color:#fff;-webkit-border-radius:2px;-moz-border-radius:2px;-ms-border-radius:2px;-o-border-radius:2px;border-radius:2px;font-weight:700 !important;}
 .tag:not(.icon).count{background-color:#3498db}
