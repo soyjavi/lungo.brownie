@@ -18,6 +18,8 @@ Copyright (c) 2011-2013 Tapquo S.L. - Licensed GPLv3, Commercial
 
   Lungo.DEVICE = null;
 
+  Lungo.Config || (Lungo.Config = {});
+
   Lungo.Element || (Lungo.Element = {});
 
   Lungo.Data || (Lungo.Data = {});
@@ -585,13 +587,14 @@ Instance initializer
 (function() {
 
   Lungo.init = function(config) {
+    Lungo.Config = config;
     if (config && config.resources) {
       Lungo.Resource.load(config.resources);
     }
     Lungo.Boot.Device.init();
     Lungo.Boot.Events.init();
     Lungo.Boot.Data.init();
-    return Lungo.Boot.Layout.init(config);
+    return Lungo.Boot.Layout.init();
   };
 
 }).call(this);
@@ -1270,7 +1273,9 @@ Handles the <sections> and <articles> to show
           }
           lng.Section.show(current, target);
           lng.Router.step(section_id);
-          _url();
+          if (Lungo.Config.history) {
+            _url();
+          }
           return _updateNavigationElements();
         }
       }
@@ -1293,7 +1298,10 @@ Handles the <sections> and <articles> to show
           if ((element != null ? element.data(C.ATTRIBUTE.TITLE) : void 0) != null) {
             lng.Element.Cache.section.find(C.QUERY.TITLE).text(element.data(C.ATTRIBUTE.TITLE));
           }
-          return _url();
+          if (Lungo.Config.history) {
+            _url();
+          }
+          return _updateNavigationElements();
         }
       }
     };
@@ -1320,7 +1328,9 @@ Handles the <sections> and <articles> to show
         }
       }
       lng.Section.show(current, target);
-      _url();
+      if (Lungo.Config.history != null) {
+        _url();
+      }
       return _updateNavigationElements();
     };
     /*
@@ -1358,10 +1368,9 @@ Handles the <sections> and <articles> to show
         _hashed_url += "" + section + "/";
       }
       _hashed_url += lng.Element.Cache.article.attr("id");
-      setTimeout((function() {
+      return setTimeout((function() {
         return window.location.hash = _hashed_url;
       }), 0);
-      return _updateNavigationElements();
     };
     _updateNavigationElements = function() {
       var article_id, nav;
@@ -1922,10 +1931,10 @@ Initialize the Layout of LungoJS (if it's a mobile environment)
     @method init
     */
 
-    init = function(config) {
+    init = function() {
       var _ref;
       lng.Fallback.fixPositionInAndroid();
-      if (((config != null ? config.history : void 0) != null) && config.history === true && ((_ref = window.location.hash) != null ? _ref.length : void 0) >= 2) {
+      if (Lungo.Config.history && ((_ref = window.location.hash) != null ? _ref.length : void 0) >= 2) {
         _initSectionbyUrl();
       } else {
         _initSection();

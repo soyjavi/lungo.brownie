@@ -233,7 +233,7 @@ form [data-control-checkbox] input[type=checkbox]:checked + label,.form [data-co
 .loading.white > span.right{background-color:rgba(255,255,255,0.25)}
 .loading.white > span.right::after{background-color:rgba(255,255,255,0.2)}
 .loading.white > span.top::before{background-color:rgba(255,255,255,0.15)}
-section.show .loading,section.active .loading,.notification .loading{-webkit-animation:rotatingLoader .5s infinite linear;moz-animation:rotatingLoader .5s infinite linear}
+section.show .loading,section.active .loading,.notification .loading{-webkit-animation:rotatingLoader 600ms infinite linear;moz-animation:rotatingLoader 600ms infinite linear}
 @-webkit-keyframes rotatingLoader{0%{-webkit-transform:rotate(0);-moz-transform:rotate(0);-ms-transform:rotate(0);-o-transform:rotate(0);transform:rotate(0)}
 8.32%{-webkit-transform:rotate(0);-moz-transform:rotate(0);-ms-transform:rotate(0);-o-transform:rotate(0);transform:rotate(0)}
 8.33%{-webkit-transform:rotate(30deg);-moz-transform:rotate(30deg);-ms-transform:rotate(30deg);-o-transform:rotate(30deg);transform:rotate(30deg)}
