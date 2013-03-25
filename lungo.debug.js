@@ -14,7 +14,7 @@ Copyright (c) 2011-2013 Tapquo S.L. - Licensed GPLv3, Commercial
 
   window.Lungo = Lungo = {};
 
-  Lungo.VERSION = "2.1.0313";
+  Lungo.VERSION = "2.1.0325";
 
   Lungo.DEVICE = null;
 
@@ -613,14 +613,14 @@ Notification system in CSS3
 (function() {
 
   Lungo.Notification = (function(lng) {
-    var ANIMATION_MILISECONDS, ATTRIBUTE, BINDING, CALLBACK_HIDE, DELAY_TIME, MARKUP_NOTIFICATION, SELECTOR, STYLE, confirm, error, hide, html, push, show, success, _button_markup, _el, _hide, _init, _markup, _notify, _options, _show, _subscribeEvents, _window;
+    var ATTRIBUTE, BINDING, DELAY_TIME, MARKUP_NOTIFICATION, SELECTOR, STYLE, TRANSITION, confirm, error, hide, html, push, show, success, _button_markup, _el, _hide, _init, _markup, _notify, _options, _show, _subscribeEvents, _window;
     _options = [];
     _el = null;
     _window = null;
     DELAY_TIME = 1;
-    ANIMATION_MILISECONDS = 200;
     ATTRIBUTE = lng.Constants.ATTRIBUTE;
     BINDING = lng.Constants.BINDING;
+    TRANSITION = lng.Constants.TRANSITION;
     SELECTOR = {
       BODY: "body",
       NOTIFICATION: ".notification",
@@ -636,7 +636,6 @@ Notification system in CSS3
       WORKING: "working",
       INPUT: "input"
     };
-    CALLBACK_HIDE = "Lungo.Notification.hide()";
     MARKUP_NOTIFICATION = "<div class=\"notification\"><div class=\"window\"></div></div>";
     /*
     */
@@ -660,7 +659,7 @@ Notification system in CSS3
       _window.removeClass("show");
       return setTimeout((function() {
         return _el.removeClass("show").removeClass("html").removeClass("confirm").removeClass("notify").removeClass("growl");
-      }), ANIMATION_MILISECONDS - 50);
+      }), TRANSITION.DURATION / 2);
     };
     /*
     */
@@ -698,10 +697,9 @@ Notification system in CSS3
     /*
     */
 
-    push = function(title, icon) {
-      var seconds;
-      _show(_markup(title, null, icon), "push", false);
-      return _hide(seconds = 5);
+    push = function(title, icon, style) {
+      _show(_markup(title, null, icon), "push " + style, false);
+      return _hide(5);
     };
     _init = function() {
       lng.dom(SELECTOR.BODY).append(MARKUP_NOTIFICATION);
@@ -726,24 +724,23 @@ Notification system in CSS3
       return setTimeout((function() {
         _window.html(html);
         return _window.attr("class", "window " + stylesheet + " show");
-      }), 400);
+      }), TRANSITION.DURATION / 2);
     };
     _hide = function(seconds, callback) {
       var _this = this;
       if ((seconds != null) && seconds > 0) {
         return setTimeout((function() {
-          hide();
           if (callback) {
-            return callback.call(_this);
+            return callback.call(void 0, callback);
+          } else {
+            return hide();
           }
         }), seconds * 1000);
       }
     };
     _notify = function(title, description, icon, stylesheet, seconds, callback) {
       _show(_markup(title, description, icon), stylesheet);
-      if (seconds) {
-        return _hide(seconds, callback);
-      }
+      return _hide(seconds, callback);
     };
     _markup = function(title, description, icon) {
       description = (!description ? "&nbsp;" : description);
@@ -1772,7 +1769,7 @@ based on each data type.
       body = lng.dom(document.body);
       body.data("device", lng.DEVICE);
       if (env.os) {
-        body.data("os", env.os.name);
+        body.data("os", env.os.name.toLowerCase());
       }
       if (lng.DEVICE === lng.Constants.DEVICE.PHONE) {
         return lng.Aside.draggable();
