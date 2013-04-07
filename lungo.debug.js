@@ -57,7 +57,7 @@ Object with data-attributes (HTML5) with a special <markup>
     },
     pull: {
       selector: "*",
-      html: "<div class=\"{{value}}\" data-control=\"pull\" data-icon=\"down\" data-loading=\"black\">\n  <strong>title</strong>\n</div>"
+      html: "<div data-control=\"pull\" data-icon=\"{{value}}\" data-loading>\n  <strong></strong>\n</div>"
     },
     progress: {
       selector: "*",
