@@ -313,24 +313,24 @@ section.show .loading,section.active .loading,.notification .loading{-webkit-ani
 
 @media only screen and (max-width: 767px){body[data-position="absolute"] > section{position:absolute}
 body[data-position="fixed"] > section{position:fixed}
-body > aside{position:absolute}
+body > aside{position:absolute;display:none !important;}
+body > aside.show{display:block !important}
 body > section{display:none;}
 body > section:not([data-transition]).show{display:block}
 body > section.show.aside:not(.right){-webkit-transform:translateX(264px);-moz-transform:translateX(264px);-ms-transform:translateX(264px);-o-transform:translateX(264px);transform:translateX(264px)}
 body > section.show.aside.right{-webkit-transform:translateX(-264px);-moz-transform:translateX(-264px);-ms-transform:translateX(-264px);-o-transform:translateX(-264px);transform:translateX(-264px)}
 body > section.show.hide{z-index:-1}
-body > section[data-transition]{display:-webkit-box;display:-moz-box;display:-ms-box;display:-o-box;display:box;-webkit-transition-property:opacity,z-index,transform;-moz-transition-property:opacity,z-index,transform;-ms-transition-property:opacity,z-index,transform;-o-transition-property:opacity,z-index,transform;transition-property:opacity,z-index,transform;-webkit-transition-duration:400ms;-moz-transition-duration:400ms;-ms-transition-duration:400ms;-o-transition-duration:400ms;transition-duration:400ms;-webkit-transition-timing-function:easeInCubic;-moz-transition-timing-function:easeInCubic;-ms-transition-timing-function:easeInCubic;-o-transition-timing-function:easeInCubic;transition-timing-function:easeInCubic;-webkit-backface-visibility:hidden;-moz-backface-visibility:hidden;-ms-backface-visibility:hidden;-o-backface-visibility:hidden;backface-visibility:hidden}
+body > section[data-transition]{display:-webkit-box;display:-moz-box;display:-ms-box;display:-o-box;display:box;-webkit-transition-property:opacity,z-index,transform,scale,opacity;-moz-transition-property:opacity,z-index,transform,scale,opacity;-ms-transition-property:opacity,z-index,transform,scale,opacity;-o-transition-property:opacity,z-index,transform,scale,opacity;transition-property:opacity,z-index,transform,scale,opacity;-webkit-transition-duration:400ms;-moz-transition-duration:400ms;-ms-transition-duration:400ms;-o-transition-duration:400ms;transition-duration:400ms;-webkit-transition-timing-function:easeInCubic;-moz-transition-timing-function:easeInCubic;-ms-transition-timing-function:easeInCubic;-o-transition-timing-function:easeInCubic;transition-timing-function:easeInCubic;-webkit-backface-visibility:hidden;-moz-backface-visibility:hidden;-ms-backface-visibility:hidden;-o-backface-visibility:hidden;backface-visibility:hidden}
+body > section[data-transition="slide"]{visibility:visible;}
+body > section[data-transition="slide"].show,body > section[data-transition="slide"]:first-child{-webkit-transform:translateX(0%);-moz-transform:translateX(0%);-ms-transform:translateX(0%);-o-transform:translateX(0%);transform:translateX(0%)}
+body > section[data-transition="slide"]:not(first-child){-webkit-transform:translateX(100%);-moz-transform:translateX(100%);-ms-transform:translateX(100%);-o-transform:translateX(100%);transform:translateX(100%)}
+body > section[data-transition="slide"].hide{-webkit-transform:scale(.9);-moz-transform:scale(.9);-ms-transform:scale(.9);-o-transform:scale(.9);transform:scale(.9);opacity:.75}
+body > section[data-transition="cover"]{-webkit-transform:translateY(100%);-moz-transform:translateY(100%);-ms-transform:translateY(100%);-o-transform:translateY(100%);transform:translateY(100%);}
+body > section[data-transition="cover"].show,body > section[data-transition="cover"].hide{-webkit-transform:translateY(0%);-moz-transform:translateY(0%);-ms-transform:translateY(0%);-o-transform:translateY(0%);transform:translateY(0%)}
+body > section[data-transition="cover"].hide{-webkit-transform:scale(.9);-moz-transform:scale(.9);-ms-transform:scale(.9);-o-transform:scale(.9);transform:scale(.9);opacity:.75}
 body > section[data-transition="pop"]{opacity:0;-webkit-transform:scale(1.15);-moz-transform:scale(1.15);-ms-transform:scale(1.15);-o-transform:scale(1.15);transform:scale(1.15);}
 body > section[data-transition="pop"].show{-webkit-transform:scale(1);-moz-transform:scale(1);-ms-transform:scale(1);-o-transform:scale(1);transform:scale(1);opacity:1}
 body > section[data-transition="pop"].hide{-webkit-transform:scale(.9);-moz-transform:scale(.9);-ms-transform:scale(.9);-o-transform:scale(.9);transform:scale(.9);opacity:0}
-body > section[data-transition="slide"]{visibility:visible;}
-body > section[data-transition="slide"]:first-child{-webkit-transform:translateX(0%);-moz-transform:translateX(0%);-ms-transform:translateX(0%);-o-transform:translateX(0%);transform:translateX(0%)}
-body > section[data-transition="slide"]:not(first-child){-webkit-transform:translateX(100%);-moz-transform:translateX(100%);-ms-transform:translateX(100%);-o-transform:translateX(100%);transform:translateX(100%)}
-body > section[data-transition="slide"].show{-webkit-transform:translateX(0%);-moz-transform:translateX(0%);-ms-transform:translateX(0%);-o-transform:translateX(0%);transform:translateX(0%)}
-body > section[data-transition="slide"].hide{-webkit-transform:translateX(-100%);-moz-transform:translateX(-100%);-ms-transform:translateX(-100%);-o-transform:translateX(-100%);transform:translateX(-100%)}
-body > section[data-transition="cover"]{-webkit-transform:translateY(110%);-moz-transform:translateY(110%);-ms-transform:translateY(110%);-o-transform:translateY(110%);transform:translateY(110%);}
-body > section[data-transition="cover"].show,body > section[data-transition="cover"].hide{-webkit-transform:translateY(0%);-moz-transform:translateY(0%);-ms-transform:translateY(0%);-o-transform:translateY(0%);transform:translateY(0%)}
-body > section[data-transition="cover"].hide{display:block}
 body > section[data-transition="fade"]{opacity:0;}
 body > section[data-transition="fade"]:first-child,body > section[data-transition="fade"].show{opacity:1}
 body > section[data-transition="fade"]:hide{opacity:0}
