@@ -236,7 +236,8 @@ Object with data-attributes (HTML5) with a special <markup>
       RIGHT: "right",
       LEFT: "left",
       HORIZONTAL: "horizontal",
-      SMALL: "small"
+      SMALL: "small",
+      LAST: "last"
     },
     TRIGGER: {
       LOAD: "load",
@@ -1265,36 +1266,12 @@ Handles the <sections> and <articles> to show
         target = current ? current.siblings(query) : lng.dom(query);
         if (target.length > 0) {
           if (lng.DEVICE === C.DEVICE.PHONE && (current != null)) {
+            current.siblings("" + C.ELEMENT.SECTION + "." + C.CLASS.LAST).removeClass(C.CLASS.LAST);
             lng.Section.defineTransition(target, current);
-            current.removeClass(C.CLASS.SHOW).addClass(C.CLASS.HIDE);
+            current.removeClass(C.CLASS.SHOW).addClass(C.CLASS.HIDE).addClass(C.CLASS.LAST);
           }
           lng.Section.show(current, target);
           lng.Router.step(section_id);
-          if (Lungo.Config.history) {
-            _url();
-          }
-          return _updateNavigationElements();
-        }
-      }
-    };
-    /*
-    Displays the <article> in a particular <section>.
-    @method   article
-    @param    {string} <section> Id
-    @param    {string} <article> Id
-    */
-
-    article = function(section_id, article_id, element) {
-      var target;
-      if (_notCurrentTarget(lng.Element.Cache.article, article_id)) {
-        lng.Router.section(section_id);
-        target = lng.Element.Cache.section.find("#" + article_id);
-        if (target.length > 0) {
-          lng.Element.Cache.article.removeClass(C.CLASS.ACTIVE).trigger(C.TRIGGER.UNLOAD);
-          lng.Element.Cache.article = target.addClass(C.CLASS.ACTIVE).trigger(C.TRIGGER.LOAD);
-          if ((element != null ? element.data(C.ATTRIBUTE.TITLE) : void 0) != null) {
-            lng.Element.Cache.section.find(C.QUERY.TITLE).text(element.data(C.ATTRIBUTE.TITLE));
-          }
           if (Lungo.Config.history) {
             _url();
           }
@@ -1329,6 +1306,31 @@ Handles the <sections> and <articles> to show
         _url();
       }
       return _updateNavigationElements();
+    };
+    /*
+    Displays the <article> in a particular <section>.
+    @method   article
+    @param    {string} <section> Id
+    @param    {string} <article> Id
+    */
+
+    article = function(section_id, article_id, element) {
+      var target;
+      if (_notCurrentTarget(lng.Element.Cache.article, article_id)) {
+        lng.Router.section(section_id);
+        target = lng.Element.Cache.section.find("#" + article_id);
+        if (target.length > 0) {
+          lng.Element.Cache.article.removeClass(C.CLASS.ACTIVE).trigger(C.TRIGGER.UNLOAD);
+          lng.Element.Cache.article = target.addClass(C.CLASS.ACTIVE).trigger(C.TRIGGER.LOAD);
+          if ((element != null ? element.data(C.ATTRIBUTE.TITLE) : void 0) != null) {
+            lng.Element.Cache.section.find(C.QUERY.TITLE).text(element.data(C.ATTRIBUTE.TITLE));
+          }
+          if (Lungo.Config.history) {
+            _url();
+          }
+          return _updateNavigationElements();
+        }
+      }
     };
     /*
     Create a new element to the browsing history based on the current section id.
@@ -1381,8 +1383,8 @@ Handles the <sections> and <articles> to show
     };
     return {
       section: section,
-      article: article,
       back: back,
+      article: article,
       history: history,
       step: step
     };
