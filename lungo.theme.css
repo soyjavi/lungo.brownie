@@ -49,7 +49,7 @@ nav[data-control=menu] > a{font-weight:600}
 
 body > section{background-color:#292929;}
 body > section,body > section a{color:#292929}
-body > section > header{background-color:#3498db;-webkit-box-shadow:0 2px 0 rgba(0,0,0,0.15),inset 0 1px 0 #5dade2,inset 0 -1px 0 #217bb8;-moz-box-shadow:0 2px 0 rgba(0,0,0,0.15),inset 0 1px 0 #5dade2,inset 0 -1px 0 #217bb8;-ms-box-shadow:0 2px 0 rgba(0,0,0,0.15),inset 0 1px 0 #5dade2,inset 0 -1px 0 #217bb8;-o-box-shadow:0 2px 0 rgba(0,0,0,0.15),inset 0 1px 0 #5dade2,inset 0 -1px 0 #217bb8;box-shadow:0 2px 0 rgba(0,0,0,0.15),inset 0 1px 0 #5dade2,inset 0 -1px 0 #217bb8;color:#fff;-webkit-border-radius:5px 5px 0 0;-moz-border-radius:5px 5px 0 0;-ms-border-radius:5px 5px 0 0;-o-border-radius:5px 5px 0 0;border-radius:5px 5px 0 0}
+body > section > header{background-color:#3498db;-webkit-box-shadow:0 1px 2px rgba(0,0,0,0.2),inset 0 1px 1px #67b2e4,inset 0 -1px 0 #217bb8;-moz-box-shadow:0 1px 2px rgba(0,0,0,0.2),inset 0 1px 1px #67b2e4,inset 0 -1px 0 #217bb8;-ms-box-shadow:0 1px 2px rgba(0,0,0,0.2),inset 0 1px 1px #67b2e4,inset 0 -1px 0 #217bb8;-o-box-shadow:0 1px 2px rgba(0,0,0,0.2),inset 0 1px 1px #67b2e4,inset 0 -1px 0 #217bb8;box-shadow:0 1px 2px rgba(0,0,0,0.2),inset 0 1px 1px #67b2e4,inset 0 -1px 0 #217bb8;color:#fff;-webkit-border-radius:5px 5px 0 0;-moz-border-radius:5px 5px 0 0;-ms-border-radius:5px 5px 0 0;-o-border-radius:5px 5px 0 0;border-radius:5px 5px 0 0}
 body > section > footer,body > section nav[data-control=groupbar]{background-color:#292929}
 body > section > article,body > section > [data-control="pull"]{background-color:#f4f4f4;}
 body > section > article.splash,body > section > [data-control="pull"].splash{background:#3498db;color:#fff}
