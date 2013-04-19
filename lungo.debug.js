@@ -1727,11 +1727,14 @@ based on each data type.
       var attribute, selector;
       attribute = lng.Attributes[key];
       selector = attribute.selector + "[data-" + key + "]";
-      return element.find(selector).each(function(index, children) {
+      element.find(selector).each(function(index, children) {
         var el;
         el = lng.dom(children);
         return _bindDataAttribute(el, el.data(key), attribute.html);
       });
+      if (element.data(key) != null) {
+        return _bindDataAttribute(element, element.data(key), attribute.html);
+      }
     };
     _bindDataAttribute = function(element, value, html) {
       return element.prepend(html.replace(/\{\{value\}\}/g, value));
@@ -2300,6 +2303,7 @@ Creates a instance of Pull & Refresh Element
       _moveElementTo(0, true);
       setTimeout((function() {
         REFRESHING = false;
+        CONTAINER.attr("class", "");
         return document.removeEventListener("touchmove", _blockGestures, false);
       }), ANIMATION_TIME);
       return CURRENT_DISTANCE = 0;
