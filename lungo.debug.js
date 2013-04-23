@@ -2381,6 +2381,7 @@ Creates a instance of Pull & Refresh Element
       }).bind("touchmove", function(event) {
         var current_y;
         if (!REFRESHING && STARTED) {
+          event.preventDefault();
           current_y = ($$.isMobile() ? event.touches[0].pageY : event.pageY);
           CURRENT_DISTANCE = current_y - INI_Y;
           if (CURRENT_DISTANCE >= 0) {
