@@ -2283,7 +2283,7 @@ Creates a instance of Pull & Refresh Element
 (function() {
 
   Lungo.Element.Pull = function(element_selector, config_data) {
-    var ANIMATION_TIME, CONFIG, CONFIG_BASE, CONTAINER, CURRENT_DISTANCE, ELEMENT, MAX_HEIGHT, REFRESHING, REFRESHING_HEIGHT, hide, _blockGestures, _handlePullEnd, _handlePulling, _moveElementTo, _refreshStart, _setContainerLoading, _setContainerOnPulling, _setContainerTitle;
+    var ANIMATION_TIME, CONFIG, CONFIG_BASE, CONTAINER, CURRENT_DISTANCE, ELEMENT, MAX_HEIGHT, REFRESHING, REFRESHING_HEIGHT, hide, _bindPreventDefault, _blockGestures, _handlePullEnd, _handlePulling, _moveElementTo, _prevent, _refreshStart, _setContainerLoading, _setContainerOnPulling, _setContainerTitle, _unbindPreventDefault;
     REFRESHING_HEIGHT = 68;
     MAX_HEIGHT = 80;
     ANIMATION_TIME = 300;
@@ -2369,9 +2369,19 @@ Creates a instance of Pull & Refresh Element
         return hide();
       }
     };
+    _bindPreventDefault = function(event) {
+      return ELEMENT[0].addEventListener("touchmove", _prevent);
+    };
+    _unbindPreventDefault = function(event) {
+      return ELEMENT[0].removeEventListener("touchmove", _prevent);
+    };
+    _prevent = function(event) {
+      return event.preventDefault();
+    };
     (function() {
-      var INI_Y, STARTED;
+      var BINDED_TO_PREVENT, INI_Y, STARTED;
       STARTED = false;
+      BINDED_TO_PREVENT = false;
       INI_Y = {};
       return ELEMENT.bind("touchstart", function(event) {
         if (ELEMENT[0].scrollTop <= 1) {
@@ -2381,16 +2391,23 @@ Creates a instance of Pull & Refresh Element
       }).bind("touchmove", function(event) {
         var current_y;
         if (!REFRESHING && STARTED) {
-          event.preventDefault();
           current_y = ($$.isMobile() ? event.touches[0].pageY : event.pageY);
           CURRENT_DISTANCE = current_y - INI_Y;
           if (CURRENT_DISTANCE >= 0) {
             ELEMENT.style("overflow-y", "hidden");
+            if (!BINDED_TO_PREVENT) {
+              _bindPreventDefault(event);
+            }
+            BINDED_TO_PREVENT = true;
             return _handlePulling();
           }
         }
       }).bind("touchend", function() {
         var INI_TOUCH;
+        if (BINDED_TO_PREVENT) {
+          _unbindPreventDefault(event);
+        }
+        BINDED_TO_PREVENT = false;
         if (STARTED) {
           ELEMENT.style("overflow-y", "scroll");
           _handlePullEnd();
