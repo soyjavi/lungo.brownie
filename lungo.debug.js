@@ -14,7 +14,7 @@ Copyright (c) 2011-2013 Tapquo S.L. - Licensed GPLv3, Commercial
 
   window.Lungo = Lungo = {};
 
-  Lungo.VERSION = "2.1.0325";
+  Lungo.VERSION = "2.1.0511";
 
   Lungo.DEVICE = null;
 
@@ -53,7 +53,7 @@ Object with data-attributes (HTML5) with a special <markup>
   Lungo.Attributes = {
     count: {
       selector: "*",
-      html: "<span class=\"tag theme count\">{{value}}</span>"
+      html: "<span class=\"tag count\">{{value}}</span>"
     },
     pull: {
       selector: "*",
@@ -77,7 +77,7 @@ Object with data-attributes (HTML5) with a special <markup>
     },
     title: {
       selector: "header",
-      html: "<span class=\"title centered\">{{value}}</span>"
+      html: "<h1 class=\"title centered\">{{value}}</h1>"
     },
     "control-checkbox": {
       selector: "*",
@@ -243,10 +243,17 @@ Object with data-attributes (HTML5) with a special <markup>
       LOAD: "load",
       UNLOAD: "unload"
     },
+    EVENT: {
+      TRANSITION_END: ["webkitAnimationEnd", "animationend"],
+      CHANGE: "change"
+    },
     TRANSITION: {
       DURATION: 400,
       ORIGIN: "transition-origin",
       ATTR: "transition"
+    },
+    ASIDE: {
+      NORMAL: 264
     },
     ATTRIBUTE: {
       ID: "id",
@@ -263,7 +270,9 @@ Object with data-attributes (HTML5) with a special <markup>
       LAST: "last",
       EMPTY: "",
       CHILDREN: "children",
-      TRANSITION: "transition"
+      TRANSITION: "transition",
+      STATE: "state",
+      DIRECTION: "direction"
     },
     BINDING: {
       START: "{{",
@@ -588,11 +597,14 @@ Instance initializer
 (function() {
 
   Lungo.init = function(config) {
+    var isPhone;
     Lungo.Config = config;
     if (config && config.resources) {
       Lungo.Resource.load(config.resources);
     }
     Lungo.Boot.Device.init();
+    isPhone = Lungo.DEVICE === Lungo.Constants.DEVICE.PHONE;
+    Lungo.Router = isPhone ? Lungo.RouterPhone : Lungo.RouterTablet;
     Lungo.Boot.Events.init();
     Lungo.Boot.Data.init();
     return Lungo.Boot.Layout.init();
@@ -628,7 +640,7 @@ Notification system in CSS3
       MODAL: ".notification .window",
       MODAL_HREF: ".notification .window a",
       WINDOW_CLOSABLE: ".notification [data-action=close], .notification > .error, .notification > .success",
-      CONFIRM_BUTTONS: ".notification .confirm a.button, .notification .push"
+      CONFIRM_BUTTONS: ".notification .confirm button, .notification .push"
     };
     STYLE = {
       MODAL: "modal",
@@ -639,6 +651,12 @@ Notification system in CSS3
     };
     MARKUP_NOTIFICATION = "<div class=\"notification\"><div class=\"window\"></div></div>";
     /*
+    Show a custom message, if no parameters shows a loading window.
+    @method   show
+    @param    {string} [OPTIONAL] Icon, null for no icon.
+    @param    {string} [OPTIONAL] Title
+    @param    {number} [OPTIONAL] Seconds to show the notification, 0 for unlimited.
+    @param    {function} [OPTIONAL] Callback when notification it's closed
     */
 
     show = function(icon, title, seconds, callback) {
@@ -648,7 +666,7 @@ Notification system in CSS3
         markup = _markup(title, null, icon);
       } else {
         data_loading = lng.Attributes.loading.html;
-        markup = data_loading.replace(BINDING.START + BINDING.KEY + BINDING.END, "icon white");
+        markup = data_loading.replace(BINDING.START + BINDING.KEY + BINDING.END, "white");
       }
       _show(markup, "growl");
       return _hide(seconds, callback);
@@ -677,12 +695,18 @@ Notification system in CSS3
     */
 
     success = function(title, description, icon, seconds, callback) {
+      if (icon == null) {
+        icon = "ok";
+      }
       return _notify(title, description, icon, "success", seconds, callback);
     };
     /*
     */
 
     error = function(title, description, icon, seconds, callback) {
+      if (icon == null) {
+        icon = "remove-sign";
+      }
       return _notify(title, description, icon, "error", seconds, callback);
     };
     /*
@@ -749,16 +773,17 @@ Notification system in CSS3
       return "<span class=\"icon " + icon + "\"></span><strong class=\"text bold\">" + title + "</strong><small>" + description + "</small>";
     };
     _button_markup = function(options, callback) {
-      return "<a href=\"#\" data-callback=\"" + callback + "\" class=\"button anchor large text thin\">" + options.label + "</a>";
+      return "<button data-callback=\"" + callback + "\" class=\"anchor\">" + options.label + "</a>";
     };
     _subscribeEvents = function() {
-      lng.dom(SELECTOR.CONFIRM_BUTTONS).tap(function(event) {
+      lng.dom(SELECTOR.CONFIRM_BUTTONS).touch(function(event) {
         var button, callback;
         button = lng.dom(this);
         if (_options[button.data("callback")] != null) {
           callback = _options[button.data("callback")].callback;
-          if (callback) {
-            callback.call(callback);
+          _options = null;
+          if (callback != null) {
+            callback.call(void 0, callback);
           }
         }
         return hide();
@@ -1242,16 +1267,18 @@ Handles the <sections> and <articles> to show
 
 @author Javier Jimenez Villar <javi@tapquo.com> || @soyjavi
 @author Guillermo Pascual <pasku@tapquo.com> || @pasku1
+@author Ignacio Olalde <ina@tapquo.com> || @piniphone
 */
 
 
 (function() {
 
-  Lungo.Router = (function(lng) {
-    var C, HASHTAG, article, back, history, section, step, _history, _notCurrentTarget, _removeLast, _updateNavigationElements, _url;
+  Lungo.RouterPhone = (function(lng) {
+    var C, HASHTAG, animationEnd, article, back, history, section, step, _animating, _history, _notCurrentTarget, _removeLast, _section, _setSectionDirections, _show, _updateNavigationElements, _url;
     C = lng.Constants;
     HASHTAG = "#";
     _history = [];
+    _animating = false;
     /*
     Navigate to a <section>.
     @method   section
@@ -1259,24 +1286,24 @@ Handles the <sections> and <articles> to show
     */
 
     section = function(section_id) {
-      var current, query, target;
+      var current, future, query;
+      if (_animating) {
+        return false;
+      }
       current = lng.Element.Cache.section;
       if (_notCurrentTarget(current, section_id)) {
         query = C.ELEMENT.SECTION + HASHTAG + section_id;
-        target = current ? current.siblings(query) : lng.dom(query);
-        if (target.length > 0) {
-          if (lng.DEVICE === C.DEVICE.PHONE && (current != null)) {
-            current.siblings("" + C.ELEMENT.SECTION + "." + C.CLASS.LAST).removeClass(C.CLASS.LAST);
-            lng.Section.defineTransition(target, current);
-            current.removeClass(C.CLASS.SHOW).addClass(C.CLASS.HIDE).addClass(C.CLASS.LAST);
-          }
-          lng.Section.show(current, target);
+        future = current ? current.siblings(query) : lng.dom(query);
+        if (future.length) {
+          _section(future, current);
           lng.Router.step(section_id);
-          if (Lungo.Config.history) {
+          if (Lungo.Config.history !== false) {
             _url();
           }
           return _updateNavigationElements();
         }
+      } else if (lng.Element.Cache.aside) {
+        return lng.Aside.hide();
       }
     };
     /*
@@ -1285,27 +1312,21 @@ Handles the <sections> and <articles> to show
     */
 
     back = function() {
-      var current, query, target;
+      var current, future, query;
+      if (_animating) {
+        return false;
+      }
       _removeLast();
       current = lng.Element.Cache.section;
       query = C.ELEMENT.SECTION + HASHTAG + history();
-      target = current.siblings(query);
-      if (lng.DEVICE === C.DEVICE.PHONE) {
-        lng.Aside.hide();
-        lng.Section.assignTransition(target, target.data(C.TRANSITION.ORIGIN));
-        current.removeClass(C.CLASS.SHOW).addClass(C.CLASS.HIDING);
-        setTimeout((function() {
-          return current.removeClass(C.CLASS.HIDING);
-        }), C.TRANSITION.DURATION);
-        if (target.hasClass("aside")) {
-          lng.Aside.toggle();
+      future = current.siblings(query);
+      if (future.length) {
+        _section(future, current, true);
+        if (Lungo.Config.history !== false) {
+          _url();
         }
+        return _updateNavigationElements();
       }
-      lng.Section.show(current, target);
-      if (Lungo.Config.history != null) {
-        _url();
-      }
-      return _updateNavigationElements();
     };
     /*
     Displays the <article> in a particular <section>.
@@ -1325,12 +1346,28 @@ Handles the <sections> and <articles> to show
           if ((element != null ? element.data(C.ATTRIBUTE.TITLE) : void 0) != null) {
             lng.Element.Cache.section.find(C.QUERY.TITLE).text(element.data(C.ATTRIBUTE.TITLE));
           }
-          if (Lungo.Config.history) {
+          if (Lungo.Config.history !== false) {
             _url();
           }
           return _updateNavigationElements();
         }
       }
+    };
+    /*
+    Triggered when <section> animation ends. Reset animation classes of section and aside
+    @method   animationEnd
+    @param    {eventObject}
+    */
+
+    animationEnd = function(event) {
+      var direction;
+      section = lng.dom(event.target);
+      direction = section.data(C.ATTRIBUTE.DIRECTION);
+      if (direction === "out" || direction === "back-out") {
+        section.removeClass(C.CLASS.SHOW);
+      }
+      section.removeAttr("data-" + C.ATTRIBUTE.DIRECTION);
+      return _animating = false;
     };
     /*
     Create a new element to the browsing history based on the current section id.
@@ -1356,6 +1393,46 @@ Handles the <sections> and <articles> to show
     Private methods
     */
 
+    _section = function(future, current, backward) {
+      var callback;
+      if (backward == null) {
+        backward = false;
+      }
+      callback = function() {
+        return _show(future, current, backward);
+      };
+      if (lng.Element.Cache.aside) {
+        return lng.Aside.hide(callback);
+      } else {
+        return callback();
+      }
+    };
+    _show = function(future, current, backward) {
+      if (current != null) {
+        _setSectionDirections(future, current, backward);
+      }
+      return lng.Section.show(current, future);
+    };
+    _setSectionDirections = function(future, current, backward) {
+      var dirPrefix;
+      if (backward == null) {
+        backward = false;
+      }
+      if ((current == null) || !future.length) {
+        return false;
+      }
+      _animating = true;
+      dirPrefix = backward ? "back-" : "";
+      future.addClass(C.CLASS.SHOW);
+      if (future.data(C.TRANSITION.ATTR)) {
+        future.data(C.ATTRIBUTE.DIRECTION, "" + dirPrefix + "in");
+      }
+      if (current.data(C.TRANSITION.ATTR)) {
+        return current.data(C.ATTRIBUTE.DIRECTION, "" + dirPrefix + "out");
+      } else {
+        return current.removeClass(C.CLASS.SHOW);
+      }
+    };
     _notCurrentTarget = function(current, id) {
       return (current != null ? current.attr(C.ATTRIBUTE.ID) : void 0) !== id;
     };
@@ -1372,21 +1449,369 @@ Handles the <sections> and <articles> to show
       }), 0);
     };
     _updateNavigationElements = function() {
-      var article_id, nav;
+      var article_id, links, nav;
       article_id = lng.Element.Cache.article.attr(C.ATTRIBUTE.ID);
-      lng.dom(C.QUERY.ARTICLE_ROUTER).removeClass(C.CLASS.ACTIVE).filter("[data-view-article=" + article_id + "]").addClass(C.CLASS.ACTIVE);
+      links = lng.dom(C.QUERY.ARTICLE_ROUTER).removeClass(C.CLASS.ACTIVE);
+      links.filter("[data-view-article=" + article_id + "]").addClass(C.CLASS.ACTIVE);
       nav = lng.Element.Cache.section.find(C.QUERY.ARTICLE_REFERENCE).addClass(C.CLASS.HIDE);
       return nav.filter("[data-article*='" + article_id + "']").removeClass(C.CLASS.HIDE);
     };
     _removeLast = function() {
-      return _history.length -= 1;
+      if (_history.length > 1) {
+        return _history.length -= 1;
+      }
     };
     return {
       section: section,
       back: back,
       article: article,
       history: history,
-      step: step
+      step: step,
+      animationEnd: animationEnd
+    };
+  })(Lungo);
+
+}).call(this);
+
+
+/*
+Handles the <sections> and <articles> to show on a tablet device
+
+@namespace Lungo
+@class Router
+
+@author Ignacio Olalde <ina@tapquo.com> || @piniphone
+*/
+
+
+(function() {
+
+  Lungo.RouterTablet = (function(lng) {
+    var C, HASHTAG, animationEnd, article, back, history, section, step, _animating, _applyDirection, _callbackSection, _checkAside, _fromCallback, _history, _isChild, _notCurrentTarget, _parentId, _removeLast, _sameSection, _show, _showAside, _showBackward, _showForward, _showFuture, _updateNavigationElements, _url;
+    C = lng.Constants;
+    HASHTAG = "#";
+    _history = [];
+    _animating = false;
+    _callbackSection = void 0;
+    _fromCallback = false;
+    /*
+    Navigate to a <section>.
+    @method   section
+    @param    {string} Id of the <section>
+    */
+
+    section = function(section_id) {
+      var current, future, query;
+      if (_animating) {
+        return false;
+      }
+      current = lng.Element.Cache.section;
+      if (_notCurrentTarget(current, section_id)) {
+        query = C.ELEMENT.SECTION + HASHTAG + section_id;
+        future = current ? current.siblings(query) : lng.dom(query);
+        if (future.length) {
+          _show(future, current);
+          step(section_id);
+          if (Lungo.Config.history !== false) {
+            _url();
+          }
+          return _updateNavigationElements();
+        }
+      }
+    };
+    /*
+    Return to previous section.
+    @method   back
+    */
+
+    back = function(animating) {
+      var current, future, i, query, target;
+      if (animating == null) {
+        animating = true;
+      }
+      if (_animating) {
+        return false;
+      }
+      if (!_sameSection()) {
+        target = lng.dom(event.target).closest(C.ELEMENT.SECTION);
+        if (target.length) {
+          i = 0;
+          while (history() !== target.attr("id") && i++ < 10) {
+            _applyDirection(lng.dom(C.ELEMENT.SECTION + HASHTAG + history()), "back-out");
+            _removeLast();
+          }
+          lng.Element.Cache.section = target;
+        }
+      }
+      _removeLast();
+      current = lng.Element.Cache.section;
+      query = C.ELEMENT.SECTION + HASHTAG + history();
+      future = current.siblings(query);
+      if (future.length) {
+        _show(future, current, true, animating);
+        if (Lungo.Config.history !== false) {
+          _url();
+        }
+        return _updateNavigationElements();
+      }
+    };
+    /*
+    Displays the <article> in a particular <section>.
+    @method   article
+    @param    {string} <section> Id
+    @param    {string} <article> Id
+    */
+
+    article = function(section_id, article_id, element) {
+      var target;
+      if (!_sameSection() && section_id !== lng.Element.Cache.section.attr("id")) {
+        back(false);
+      }
+      target = lng.dom("article#" + article_id);
+      if (target.length > 0) {
+        section = target.closest(C.ELEMENT.SECTION);
+        lng.Router.section(section.attr("id"));
+        section.children("" + C.ELEMENT.ARTICLE + "." + C.CLASS.ACTIVE).removeClass(C.CLASS.ACTIVE).trigger(C.TRIGGER.UNLOAD);
+        lng.Element.Cache.article.removeClass(C.CLASS.ACTIVE).trigger(C.TRIGGER.UNLOAD);
+        lng.Element.Cache.article = target.addClass(C.CLASS.ACTIVE).trigger(C.TRIGGER.LOAD);
+        if ((element != null ? element.data(C.ATTRIBUTE.TITLE) : void 0) != null) {
+          section.find(C.QUERY.TITLE).text(element.data(C.ATTRIBUTE.TITLE));
+        }
+        if (Lungo.Config.history !== false) {
+          _url();
+        }
+        return _updateNavigationElements(article_id);
+      }
+    };
+    /*
+    Triggered when <section> animation ends. Reset animation classes of section and aside
+    @method   animationEnd
+    @param    {eventObject}
+    */
+
+    animationEnd = function(event) {
+      var direction;
+      section = lng.dom(event.target);
+      direction = section.data(C.ATTRIBUTE.DIRECTION);
+      if (direction) {
+        if (direction === "out" || direction === "back-out") {
+          section.removeClass(C.CLASS.SHOW);
+        }
+        section.removeAttr("data-" + C.ATTRIBUTE.DIRECTION);
+        if (_callbackSection != null) {
+          _fromCallback = true;
+          _show(_callbackSection, void 0);
+          _callbackSection = void 0;
+        }
+      }
+      if (section.hasClass("asideHidding")) {
+        section.removeClass("asideHidding").removeClass("aside");
+      }
+      if (section.hasClass("asideShowing")) {
+        section.removeClass("asideShowing").addClass("aside");
+      }
+      if (section.hasClass("shadowing")) {
+        section.removeClass("shadowing").addClass("shadow");
+      }
+      if (section.hasClass("unshadowing")) {
+        section.removeClass("unshadowing").removeClass("shadow");
+      }
+      return _animating = false;
+    };
+    /*
+    Create a new element to the browsing history based on the current section id.
+    @method step
+    @param  {string} Id of the section
+    */
+
+    step = function(section_id) {
+      if (section_id !== history()) {
+        return _history.push(section_id);
+      }
+    };
+    /*
+    Returns the current browsing history section id.
+    @method history
+    @return {string} Current section id
+    */
+
+    history = function() {
+      return _history[_history.length - 1];
+    };
+    /*
+    Private methods
+    */
+
+    _show = function(future, current, backward) {
+      if (backward == null) {
+        backward = false;
+      }
+      if (current == null) {
+        _showFuture(future);
+      } else {
+        if (backward) {
+          _showBackward(current, future);
+        } else {
+          _showForward(current, future);
+        }
+        lng.Section.show(current, future);
+      }
+      return _fromCallback = false;
+    };
+    _showFuture = function(future) {
+      var current, currentHasAside, _ref, _ref1;
+      console.error("Show future --> ", future.attr("id"), "curr->", lng.Element.Cache.section);
+      lng.Element.Cache.dump();
+      current = lng.Element.Cache.section;
+      lng.Section.show(void 0, future);
+      currentHasAside = ((_ref = lng.Element.Cache.section) != null ? _ref.data("aside") : void 0) != null;
+      console.error("has asside -->", currentHasAside);
+      if (!_fromCallback || !((_ref1 = lng.Element.Cache.section) != null ? _ref1.data("aside") : void 0)) {
+        console.error('por aqui');
+        future.addClass(C.CLASS.SHOW);
+      } else {
+        _applyDirection(future, "in");
+      }
+      return _checkAside(void 0, future);
+    };
+    _showForward = function(current, future) {
+      var elements, hideSelector, parent_id;
+      if (_isChild(current, future)) {
+        _applyDirection(future, "in");
+      } else {
+        _removeLast();
+        hideSelector = "section." + C.CLASS.SHOW;
+        parent_id = _parentId(future);
+        if (parent_id) {
+          hideSelector += ":not(#" + parent_id + ")";
+        }
+        elements = lng.dom(hideSelector);
+        _applyDirection(elements, "back-out");
+        _callbackSection = future;
+      }
+      return _checkAside(current, future);
+    };
+    _showBackward = function(current, future) {
+      var showSections;
+      _applyDirection(current, "back-out");
+      showSections = lng.dom("section." + C.CLASS.SHOW + ":not(#" + (current.attr('id')) + ")");
+      if (showSections.length === 1 && (showSections.first().data("children") != null)) {
+        console.error("Show aside -->", showSections.first().data("aside"));
+        lng.Aside.show(showSections.first().data("aside"));
+      }
+      return _callbackSection = future;
+    };
+    _checkAside = function(current, target) {
+      var aside_id, current_aside;
+      aside_id = target.data("aside");
+      current_aside = lng.Element.Cache.aside;
+      if (aside_id) {
+        if (!((current != null) && (lng.Element.Cache.aside != null))) {
+          return _showAside(aside_id, target);
+        } else if (!current_aside.hasClass("box")) {
+          return lng.Aside.hide();
+        }
+      } else {
+        return lng.Aside.hide();
+      }
+    };
+    _showAside = function(aside_id, target) {
+      if (target.data("children")) {
+        return lng.Aside.show(aside_id);
+      } else {
+        return lng.Aside.showFix(aside_id);
+      }
+    };
+    _parentId = function(section) {
+      var parent;
+      parent = lng.dom("[data-children~=" + (section.attr('id')) + "]");
+      if (parent.length) {
+        return parent.attr("id");
+      }
+      return null;
+    };
+    _isChild = function(current, future) {
+      var children, target_id;
+      children = current.data("children");
+      if (!children) {
+        return false;
+      }
+      target_id = future.attr("id");
+      return children.indexOf(target_id) !== -1;
+    };
+    _applyDirection = function(section, direction) {
+      var apply, isForward;
+      isForward = direction.indexOf("in") >= 0;
+      apply = false;
+      if (isForward) {
+        if (!section.hasClass(C.CLASS.SHOW)) {
+          apply = true;
+        }
+      } else {
+        apply = true;
+      }
+      if (apply) {
+        section.addClass(C.CLASS.SHOW);
+        if (section.data(C.TRANSITION.ATTR)) {
+          return section.data(C.ATTRIBUTE.DIRECTION, direction);
+        }
+      }
+    };
+    _sameSection = function() {
+      var dispacher_section, same;
+      if (!event || !lng.Element.Cache.section) {
+        return true;
+      }
+      dispacher_section = lng.dom(event.target).closest("section,aside");
+      same = dispacher_section.attr("id") === lng.Element.Cache.section.attr("id");
+      return same;
+    };
+    _notCurrentTarget = function(current, id) {
+      return (current != null ? current.attr(C.ATTRIBUTE.ID) : void 0) !== id;
+    };
+    _url = function() {
+      var _hashed_url, _i, _len;
+      _hashed_url = "";
+      for (_i = 0, _len = _history.length; _i < _len; _i++) {
+        section = _history[_i];
+        _hashed_url += "" + section + "/";
+      }
+      _hashed_url += lng.Element.Cache.article.attr("id");
+      return setTimeout((function() {
+        return window.location.hash = _hashed_url;
+      }), 0);
+    };
+    _updateNavigationElements = function(article_id) {
+      var aside, current_section_id, links, nav, _ref;
+      if (!article_id) {
+        article_id = (_ref = lng.Element.Cache.article) != null ? _ref.attr(C.ATTRIBUTE.ID) : void 0;
+      }
+      links = lng.dom(C.QUERY.ARTICLE_ROUTER).removeClass(C.CLASS.ACTIVE);
+      links.filter("[data-view-article=" + article_id + "]").addClass(C.CLASS.ACTIVE);
+      nav = lng.Element.Cache.section.find(C.QUERY.ARTICLE_REFERENCE).addClass(C.CLASS.HIDE);
+      nav.filter("[data-article~='" + article_id + "']").removeClass(C.CLASS.HIDE);
+      if (lng.Element.Cache.aside) {
+        current_section_id = lng.Element.Cache.section.attr("id");
+        aside = lng.Element.Cache.aside;
+        aside.find(C.QUERY.SECTION_ROUTER + "." + C.CLASS.ACTIVE).removeClass("active");
+        return aside.find("[data-view-section=" + current_section_id + "]").addClass(C.CLASS.ACTIVE);
+      }
+    };
+    _removeLast = function() {
+      if (_history.length > 1) {
+        return _history.length -= 1;
+      }
+    };
+    return {
+      section: section,
+      back: back,
+      article: article,
+      history: history,
+      step: step,
+      animationEnd: animationEnd,
+      historys: function() {
+        return _history;
+      }
     };
   })(Lungo);
 
@@ -1406,62 +1831,63 @@ Initialize the <articles> layout of a certain <section>
 (function() {
 
   Lungo.Aside = (function(lng) {
-    var C, active, draggable, hide, show, toggle, _asideStylesheet;
+    var C, animationEnd, draggable, hide, show, showFix, toggle, _alreadyOpen, _asideStylesheet, _callback, _customAsideAnimation, _phoneCustomAnimation;
     C = lng.Constants;
-    /*
-    Active aside for a determinate section
-    @method active
-    @param  {object} Section element
-    */
-
-    active = function(section) {
-      var aside_id, current_aside;
-      aside_id = section.data("aside");
-      current_aside = lng.Element.Cache.aside;
-      if (current_aside && aside_id !== (current_aside != null ? current_aside.attr(C.ATTRIBUTE.ID) : void 0)) {
-        current_aside.removeClass(C.CLASS.SHOW).removeClass(C.CLASS.ACTIVE);
-        lng.Element.Cache.aside = null;
-      }
-      if (aside_id) {
-        lng.Element.Cache.aside = lng.dom(C.ELEMENT.ASIDE + "#" + aside_id);
-        lng.Element.Cache.aside.addClass(C.CLASS.ACTIVE);
-        if (lng.DEVICE !== C.DEVICE.PHONE) {
-          lng.Aside.show(aside_id);
-        }
-      }
-      return lng.Element.Cache.aside;
-    };
-    /*
-    Toggle an aside element
-    @method toggle
-    @param  {string} Aside id
-    */
-
-    toggle = function() {
-      var is_visible;
-      if (lng.Element.Cache.aside) {
-        is_visible = lng.Element.Cache.aside.hasClass(C.CLASS.SHOW);
-        if (is_visible) {
-          return lng.Aside.hide();
-        } else {
-          return lng.Aside.show();
-        }
-      }
-    };
+    _callback = void 0;
+    _customAsideAnimation = void 0;
     /*
     Display an aside element with a particular <section>
     @method show
     */
 
-    show = function() {
-      if (lng.Element.Cache.aside != null) {
-        setTimeout((function() {
-          return lng.Element.Cache.aside.addClass(C.CLASS.SHOW);
-        }), C.TRANSITION.DURATION);
+    show = function(aside_id, animate_section, fromX) {
+      var aside, aside_section, aside_transition, child, childs, _i, _len, _ref;
+      if (animate_section == null) {
+        animate_section = true;
+      }
+      if (fromX == null) {
+        fromX = 0;
+      }
+      aside = lng.dom("#" + aside_id);
+      if (aside.length && !_alreadyOpen(aside_id)) {
+        lng.Element.Cache.aside = aside;
         if (lng.DEVICE === C.DEVICE.PHONE) {
-          lng.Element.Cache.aside.addClass(C.CLASS.SHOW);
-          return lng.Element.Cache.section.addClass(_asideStylesheet()).addClass(C.CLASS.ASIDE);
+          aside_transition = aside.data(C.TRANSITION.ATTR) || "left";
+          aside.addClass(C.CLASS.SHOW);
+          if (fromX) {
+            return _phoneCustomAnimation(fromX, false);
+          } else {
+            return lng.Element.Cache.section.data("aside-" + aside_transition, "show");
+          }
+        } else {
+          aside.addClass(C.CLASS.SHOW);
+          aside_section = lng.dom("[data-aside=" + aside_id + "][data-children]");
+          if (aside_section.attr("id") !== ((_ref = lng.Element.Cache.section) != null ? _ref.attr("id") : void 0)) {
+            lng.Element.Cache.section.addClass("shadowing");
+            childs = aside_section.data("children").split(" ");
+            for (_i = 0, _len = childs.length; _i < _len; _i++) {
+              child = childs[_i];
+              child = lng.dom(C.ELEMENT.SECTION + "#" + child);
+              if (child.hasClass(C.CLASS.SHOW)) {
+                child.addClass("shadowing");
+              }
+            }
+          }
+          return aside_section.removeClass("aside").addClass("asideShowing");
         }
+      }
+    };
+    /*
+    Shows a fixed aside (not able to hide cause section have not children)
+    @method hide
+    */
+
+    showFix = function(aside_id) {
+      var aside;
+      aside = lng.dom("#" + aside_id);
+      if (aside.length) {
+        lng.Element.Cache.aside = aside;
+        return aside.addClass(C.CLASS.SHOW).addClass("box");
       }
     };
     /*
@@ -1469,12 +1895,68 @@ Initialize the <articles> layout of a certain <section>
     @method hide
     */
 
-    hide = function() {
-      if ((lng.Element.Cache.aside != null) && lng.DEVICE === C.DEVICE.PHONE) {
-        lng.Element.Cache.section.removeClass(C.CLASS.ASIDE);
-        return setTimeout((function() {
-          return lng.Element.Cache.aside.removeClass(C.CLASS.SHOW);
-        }), C.TRANSITION.DURATION);
+    hide = function(callback, fromX) {
+      var aside_transition;
+      if (lng.Element.Cache.aside) {
+        _callback = callback;
+        aside_transition = lng.Element.Cache.aside.data(C.TRANSITION.ATTR) || "left";
+        if (lng.DEVICE === C.DEVICE.PHONE) {
+          lng.Element.Cache.section.removeClass("aside").removeClass("aside-right");
+          if (fromX) {
+            return _phoneCustomAnimation(fromX, true);
+          } else {
+            return lng.Element.Cache.section.data("aside-" + aside_transition, "hide");
+          }
+        } else {
+          lng.dom(".aside").removeClass("aside").addClass("asideHidding");
+          lng.Element.Cache.aside = null;
+          if (callback) {
+            callback.call(callback);
+          }
+          return lng.dom(".shadow").removeClass("shadow").addClass("unshadowing");
+        }
+      } else if (callback) {
+        return callback.call(callback);
+      }
+    };
+    /*
+    Toggle an aside element
+    @method toggle
+    @param  {string} Aside id
+    */
+
+    toggle = function(aside) {
+      if (lng.Element.Cache.aside) {
+        return lng.Aside.hide();
+      } else {
+        return lng.Aside.show(aside);
+      }
+    };
+    /*
+    Triggered when <aside> animation ends.
+    @method   animationEnd
+    @param    {object} event
+    */
+
+    animationEnd = function(event) {
+      var aside_transition, className, section;
+      section = lng.dom(event.target);
+      aside_transition = lng.Element.Cache.aside.data(C.TRANSITION.ATTR) || "left";
+      if (section.data("aside-" + aside_transition) === "hide") {
+        lng.Element.Cache.aside.removeClass(C.CLASS.SHOW);
+        lng.Element.Cache.aside = null;
+        section.removeAttr("data-aside-" + aside_transition);
+        if (_callback) {
+          _callback.call(_callback);
+        }
+        _callback = void 0;
+      } else {
+        className = aside_transition.indexOf("right") === -1 ? "aside" : "aside-right";
+        section.removeAttr("style").removeAttr("data-aside-" + aside_transition).addClass(className);
+      }
+      if (_customAsideAnimation) {
+        _customAsideAnimation.remove();
+        return _customAsideAnimation = void 0;
       }
     };
     /*
@@ -1484,8 +1966,10 @@ Initialize the <articles> layout of a certain <section>
 
     draggable = function() {
       var MIN_XDIFF;
-      MIN_XDIFF = parseInt(document.body.getBoundingClientRect().width / 3, 10);
-      MIN_XDIFF = 128;
+      if (lng.DEVICE !== C.DEVICE.PHONE) {
+        return false;
+      }
+      MIN_XDIFF = 96;
       return lng.dom(C.QUERY.HREF_ASIDE).each(function() {
         var aside, el, section, started;
         started = false;
@@ -1494,7 +1978,7 @@ Initialize the <articles> layout of a certain <section>
         aside = lng.dom("aside#" + el.data("aside"));
         section.swiping(function(gesture) {
           var xdiff, ydiff;
-          if (!section.hasClass("aside")) {
+          if (!(section.hasClass("aside") || section.hasClass("aside-right"))) {
             xdiff = gesture.currentTouch.x - gesture.iniTouch.x;
             ydiff = Math.abs(gesture.currentTouch.y - gesture.iniTouch.y);
             started = (started ? true : xdiff > 3 * ydiff && xdiff < 50);
@@ -1514,9 +1998,9 @@ Initialize the <articles> layout of a certain <section>
           ydiff = Math.abs(gesture.currentTouch.y - gesture.iniTouch.y);
           section.attr("style", "");
           if (diff > MIN_XDIFF && started) {
-            show(aside);
+            show(aside.attr("id"), true, gesture.currentTouch.x);
           } else {
-            hide(aside);
+            hide;
           }
           return started = false;
         });
@@ -1526,6 +2010,10 @@ Initialize the <articles> layout of a certain <section>
     Private methods
     */
 
+    _alreadyOpen = function(aside_id) {
+      var _ref;
+      return ((_ref = lng.Element.Cache.aside) != null ? _ref.attr("id") : void 0) === aside_id;
+    };
     _asideStylesheet = function() {
       var _ref;
       if ((_ref = lng.Element.Cache.aside) != null ? _ref.hasClass(C.CLASS.RIGHT) : void 0) {
@@ -1534,12 +2022,29 @@ Initialize the <articles> layout of a certain <section>
         return "  ";
       }
     };
+    _phoneCustomAnimation = function(fromX, hide) {
+      var kfStyle;
+      if (hide == null) {
+        hide = false;
+      }
+      if (hide) {
+        kfStyle = document.createTextNode("@-webkit-keyframes asideCustomKF {\n  0%   { -webkit-transform: translateX(" + fromX + "px); }\n  40%  { -webkit-transform: translateX(" + (fromX + 8) + "px); }\n  100% { -webkit-transform: translateX(0); }\n}");
+      } else {
+        kfStyle = document.createTextNode("@-webkit-keyframes asideCustomKF {\n  0%   { -webkit-transform: translateX(" + fromX + "px); }\n  60%  { -webkit-transform: translateX(" + (C.ASIDE.NORMAL + 8) + "px); }\n  100% { -webkit-transform: translateX(" + C.ASIDE.NORMAL + "px); }\n}");
+      }
+      _customAsideAnimation = document.createElement('style');
+      _customAsideAnimation.type = 'text/css';
+      _customAsideAnimation.appendChild(kfStyle);
+      document.getElementsByTagName("head")[0].appendChild(_customAsideAnimation);
+      return lng.Element.Cache.section.style("-webkit-animation-name", "asideCustomKF");
+    };
     return {
-      active: active,
       toggle: toggle,
       show: show,
+      showFix: showFix,
       hide: hide,
-      draggable: draggable
+      draggable: draggable,
+      animationEnd: animationEnd
     };
   })(Lungo);
 
@@ -1559,7 +2064,7 @@ Initialize the <articles> layout of a certain <section>
 (function() {
 
   Lungo.Section = (function(lng) {
-    var C, assignTransition, defineTransition, show, _assignTransitionOrigin, _phone, _tablet;
+    var C, show, _phone, _tablet;
     C = lng.Constants;
     show = function(current, target) {
       var active_article;
@@ -1574,55 +2079,23 @@ Initialize the <articles> layout of a certain <section>
         active_article = target.find(C.ELEMENT.ARTICLE).first().addClass(C.CLASS.ACTIVE);
       }
       lng.Element.Cache.article = active_article;
-      lng.Element.Cache.aside = lng.Aside.active(target);
-      if (target.hasClass("aside")) {
-        lng.Aside.show();
-      }
       if (current) {
         current.trigger(C.TRIGGER.UNLOAD);
       }
       return target.trigger(C.TRIGGER.LOAD);
-    };
-    defineTransition = function(target, current) {
-      var target_transition;
-      target_transition = target.data(C.ATTRIBUTE.TRANSITION);
-      if (target_transition) {
-        _assignTransitionOrigin(current);
-        return assignTransition(current, target_transition);
-      }
-    };
-    assignTransition = function(section, transitionName) {
-      return section.data(C.ATTRIBUTE.TRANSITION, transitionName);
     };
     /*
     Private methods
     */
 
     _phone = function(target) {
-      return target.removeClass(C.CLASS.HIDE).addClass(C.CLASS.SHOW);
+      return target.addClass(C.CLASS.SHOW);
     };
     _tablet = function(current, target) {
-      var children;
-      if (current) {
-        children = current.data(C.ATTRIBUTE.CHILDREN);
-      }
-      if (current && (!children || children.indexOf(target.attr(C.ATTRIBUTE.ID)) === -1)) {
-        current.addClass(C.CLASS.HIDE);
-        setTimeout((function() {
-          return current.removeClass(C.CLASS.SHOW).removeClass(C.CLASS.HIDE);
-        }), C.TRANSITION.DURATION);
-      }
-      return setTimeout((function() {
-        return target.addClass(C.CLASS.SHOW);
-      }), C.TRANSITION.DURATION);
-    };
-    _assignTransitionOrigin = function(section) {
-      return section.data(C.TRANSITION.ORIGIN, section.data(C.TRANSITION.ATTR));
+      return this;
     };
     return {
-      show: show,
-      defineTransition: defineTransition,
-      assignTransition: assignTransition
+      show: show
     };
   })(Lungo);
 
@@ -1796,13 +2269,14 @@ Initialize the automatic DOM UI events
 
 @author Javier Jimenez Villar <javi@tapquo.com> || @soyjavi
 @author Guillermo Pascual <pasku@tapquo.com> || @pasku1
+@author Ignacio Olalde <ina@tapquo.com> || @piniphone
 */
 
 
 (function() {
 
   Lungo.Boot.Events = (function(lng) {
-    var ATTRIBUTE, C, CLASS, ELEMENT, QUERY, init, _changeCheckboxValue, _closeMenu, _onArticle, _onAside, _onAsyncResource, _onMenu, _onSection;
+    var ATTRIBUTE, C, CLASS, ELEMENT, QUERY, init, _changeCheckboxValue, _closeMenu, _onArticle, _onAside, _onAsyncResource, _onMenu, _onSection, _transitionEnd;
     C = lng.Constants;
     ATTRIBUTE = lng.Constants.ATTRIBUTE;
     CLASS = lng.Constants.CLASS;
@@ -1815,14 +2289,23 @@ Initialize the automatic DOM UI events
     */
 
     init = function() {
+      var transition, _i, _len, _ref, _results;
       lng.dom(C.QUERY.SECTION_ROUTER_TOUCH).touch(_onSection);
-      lng.dom(C.QUERY.ARTICLE_ROUTER_TOUCH).touch(_onArticle);
       lng.dom(C.QUERY.SECTION_ROUTER_TAP).tap(_onSection);
+      lng.dom(C.QUERY.ARTICLE_ROUTER_TOUCH).touch(_onArticle);
       lng.dom(C.QUERY.ARTICLE_ROUTER_TAP).tap(_onArticle);
       lng.dom(C.QUERY.ASIDE_ROUTER).touch(_onAside);
       lng.dom(C.QUERY.MENU_ROUTER).touch(_onMenu);
       lng.dom(QUERY.MENU_HREF).touch(_closeMenu);
-      return lng.dom(QUERY.CONTROL_CHECKBOX).on("change", _changeCheckboxValue);
+      lng.dom(QUERY.CONTROL_CHECKBOX).on(C.EVENT.CHANGE, _changeCheckboxValue);
+      _ref = C.EVENT.TRANSITION_END;
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        transition = _ref[_i];
+        lng.dom("body").delegate(C.ELEMENT.SECTION, transition, _transitionEnd);
+        _results.push(lng.dom("body").delegate(C.ELEMENT.ASIDE, transition, _transitionEnd));
+      }
+      return _results;
     };
     _onSection = function(event) {
       var el, section_id;
@@ -1846,8 +2329,7 @@ Initialize the automatic DOM UI events
       if (el.data("async")) {
         return _onAsyncResource(el, C.ELEMENT.ARTICLE);
       } else {
-        lng.Router.article(lng.Router.history(), el.data("view-article"), el);
-        return lng.Aside.hide();
+        return lng.Router.article(lng.Router.history(), el.data("view-article"), el);
       }
     };
     _onAsyncResource = function(el, type) {
@@ -1876,8 +2358,10 @@ Initialize the automatic DOM UI events
       return lng.Notification.hide();
     };
     _onAside = function(event) {
+      var aside_id;
       event.preventDefault();
-      return lng.Aside.toggle();
+      aside_id = lng.dom(event.target).closest(C.QUERY.ASIDE_ROUTER).data("view-aside");
+      return lng.Aside.toggle(aside_id);
     };
     _onMenu = function(event) {
       var menu_id;
@@ -1902,6 +2386,18 @@ Initialize the automatic DOM UI events
       el.removeClass("checked");
       if (checked) {
         return el.addClass("checked");
+      }
+    };
+    _transitionEnd = function(event) {
+      var asideRelated, hasDirection, section, shadowRelated;
+      section = lng.dom(event.target);
+      hasDirection = section.data("direction");
+      asideRelated = section.hasClass("asideHidding") || section.hasClass("asideShowing");
+      shadowRelated = section.hasClass("shadowing") || section.hasClass("unshadowing");
+      if (hasDirection || asideRelated || shadowRelated) {
+        return lng.Router.animationEnd(event);
+      } else {
+        return lng.Aside.animationEnd(event);
       }
     };
     return {
@@ -2026,7 +2522,18 @@ DOM Elements caching
     section: null,
     article: null,
     aside: null,
-    navigation: null
+    navigation: null,
+    dump: function() {
+      var txt, _ref, _ref1, _ref2, _ref3;
+      txt = "";
+      txt += "================ cache data ================\n";
+      txt += " SECTION:    " + ((_ref = this.section) != null ? _ref.attr('id') : void 0) + "\n";
+      txt += " ARTICLE:    " + ((_ref1 = this.article) != null ? _ref1.attr('id') : void 0) + "\n";
+      txt += " ASIDE:      " + ((_ref2 = this.aside) != null ? _ref2.attr('id') : void 0) + "\n";
+      txt += " NAVIGATION: " + ((_ref3 = this.navigation) != null ? _ref3.attr('id') : void 0) + "\n";
+      txt += "============================================\n";
+      return console.error(txt);
+    }
   };
 
 }).call(this);
@@ -2283,7 +2790,7 @@ Creates a instance of Pull & Refresh Element
 (function() {
 
   Lungo.Element.Pull = function(element_selector, config_data) {
-    var ANIMATION_TIME, CONFIG, CONFIG_BASE, CONTAINER, CURRENT_DISTANCE, ELEMENT, MAX_HEIGHT, REFRESHING, REFRESHING_HEIGHT, hide, _bindPreventDefault, _blockGestures, _handlePullEnd, _handlePulling, _moveElementTo, _prevent, _refreshStart, _setContainerLoading, _setContainerOnPulling, _setContainerTitle, _unbindPreventDefault;
+    var ANIMATION_TIME, CONFIG, CONFIG_BASE, CONTAINER, CURRENT_DISTANCE, ELEMENT, MAX_HEIGHT, REFRESHING, REFRESHING_HEIGHT, hide, _blockGestures, _getTouchY, _handlePullEnd, _handlePulling, _moveElementTo, _refreshStart, _setContainerLoading, _setContainerOnPulling, _setContainerTitle;
     REFRESHING_HEIGHT = 68;
     MAX_HEIGHT = 80;
     ANIMATION_TIME = 300;
@@ -2304,7 +2811,7 @@ Creates a instance of Pull & Refresh Element
       setTimeout((function() {
         REFRESHING = false;
         CONTAINER.attr("class", "");
-        return document.removeEventListener("touchmove", _blockGestures, false);
+        return ELEMENT[0].removeEventListener("touchmove", _blockGestures, true);
       }), ANIMATION_TIME);
       return CURRENT_DISTANCE = 0;
     };
@@ -2313,6 +2820,8 @@ Creates a instance of Pull & Refresh Element
       newPos = (posY > MAX_HEIGHT ? MAX_HEIGHT : posY);
       if (animate) {
         ELEMENT.addClass("pull");
+      } else {
+        ELEMENT.removeClass("pull");
       }
       ELEMENT.style("-webkit-transform", "translate(0, " + newPos + "px)");
       if (animate) {
@@ -2323,7 +2832,7 @@ Creates a instance of Pull & Refresh Element
     };
     _refreshStart = function(event) {
       REFRESHING = true;
-      document.addEventListener("touchmove", _blockGestures, false);
+      ELEMENT[0].addEventListener("touchmove", _blockGestures, true);
       _setContainerTitle(CONFIG.onRefresh);
       _setContainerLoading(true);
       _moveElementTo(REFRESHING_HEIGHT, true);
@@ -2364,56 +2873,46 @@ Creates a instance of Pull & Refresh Element
     };
     _handlePullEnd = function(event) {
       if (CURRENT_DISTANCE > REFRESHING_HEIGHT) {
-        return _refreshStart();
+        _refreshStart();
       } else {
-        return hide();
+        hide();
+      }
+      return this;
+    };
+    _getTouchY = function(event) {
+      if ($$.isMobile()) {
+        return event.touches[0].pageY;
+      } else {
+        return event.pageY;
       }
     };
-    _bindPreventDefault = function(event) {
-      return ELEMENT[0].addEventListener("touchmove", _prevent);
-    };
-    _unbindPreventDefault = function(event) {
-      return ELEMENT[0].removeEventListener("touchmove", _prevent);
-    };
-    _prevent = function(event) {
-      return event.preventDefault();
-    };
     (function() {
-      var BINDED_TO_PREVENT, INI_Y, STARTED;
+      var INI_Y, STARTED;
       STARTED = false;
-      BINDED_TO_PREVENT = false;
-      INI_Y = {};
+      INI_Y = 0;
       return ELEMENT.bind("touchstart", function(event) {
         if (ELEMENT[0].scrollTop <= 1) {
           STARTED = true;
-          return INI_Y = ($$.isMobile() ? event.touches[0].pageY : event.pageY);
+          INI_Y = _getTouchY(event);
         }
+        return true;
       }).bind("touchmove", function(event) {
         var current_y;
         if (!REFRESHING && STARTED) {
-          current_y = ($$.isMobile() ? event.touches[0].pageY : event.pageY);
+          current_y = _getTouchY(event);
           CURRENT_DISTANCE = current_y - INI_Y;
           if (CURRENT_DISTANCE >= 0) {
-            ELEMENT.style("overflow-y", "hidden");
-            if (!BINDED_TO_PREVENT) {
-              _bindPreventDefault(event);
-            }
-            BINDED_TO_PREVENT = true;
-            return _handlePulling();
+            _handlePulling(event);
+            event.preventDefault();
           }
         }
+        return true;
       }).bind("touchend", function() {
-        var INI_TOUCH;
-        if (BINDED_TO_PREVENT) {
-          _unbindPreventDefault(event);
-        }
-        BINDED_TO_PREVENT = false;
         if (STARTED) {
-          ELEMENT.style("overflow-y", "scroll");
           _handlePullEnd();
         }
-        INI_TOUCH = {};
-        return STARTED = false;
+        STARTED = false;
+        return true;
       });
     })();
     return {
