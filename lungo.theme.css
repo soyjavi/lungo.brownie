@@ -11,7 +11,7 @@ body {
   background-color: #000;
   color: #f4f4f4;
   font: 16px/1.25 "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-weight: 300;
+  font-weight: bold;
   letter-spacing: -0.05em;
 }
 body .text.thin {
@@ -40,6 +40,7 @@ body .theme:active {
  */
 section .list li {
   background: #fff;
+  font-weight: 300;
 }
 section .list li:not(.anchor) {
   border-bottom: inset 1px #cfcfcf;
@@ -73,7 +74,7 @@ section .list li.warning {
   box-shadow: inset 4px 0 #edba22;
 }
 section .list li.arrow::after {
-  border-color: #fcfcfc;
+  border-color: #cfcfcf;
 }
 section .list li.contrast,
 section .list li a.contrast {
@@ -138,12 +139,16 @@ section .list li .on-right:not(.tag),
 section .list li a .on-right:not(.tag) {
   color: #808080;
 }
+section .list li .on-right,
+section .list li a .on-right {
+  font-weight: 400;
+}
 section .list li:not(.big) img {
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  -ms-border-radius: 4px;
-  -o-border-radius: 4px;
-  border-radius: 4px;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  -ms-border-radius: 2px;
+  -o-border-radius: 2px;
+  border-radius: 2px;
 }
 .list:not(.indented) li.dark,
 .list:not(.indented) li.theme,
@@ -184,7 +189,7 @@ aside .list li .icon {
  */
 section header > nav:not(.on-right) a,
 section header > nav:not(.on-right) button {
-  color: WHITE;
+  color: #ebf5fb;
 }
 section header > nav.on-right a,
 section header > nav.on-right button {
@@ -207,29 +212,16 @@ aside header > nav button {
   -o-text-shadow: 0 1px #2a2a2a;
   text-shadow: 0 1px #2a2a2a;
 }
-header > nav a,
-header > nav button {
-  -webkit-text-shadow: 0 1px #258bcf;
-  -moz-text-shadow: 0 1px #258bcf;
-  -ms-text-shadow: 0 1px #258bcf;
-  -o-text-shadow: 0 1px #258bcf;
-  text-shadow: 0 1px #258bcf;
-  -webkit-transition: text-shadow 400ms ease;
-  -moz-transition: text-shadow 400ms ease;
-  -ms-transition: text-shadow 400ms ease;
-  -o-transition: text-shadow 400ms ease;
-  transition: text-shadow 400ms ease;
-}
 header > nav a:active,
 header > nav button:active,
 header > nav a.active,
 header > nav button.active {
-  color: WHITE;
-  -webkit-text-shadow: 0 0 0.5em WHITE;
-  -moz-text-shadow: 0 0 0.5em WHITE;
-  -ms-text-shadow: 0 0 0.5em WHITE;
-  -o-text-shadow: 0 0 0.5em WHITE;
-  text-shadow: 0 0 0.5em WHITE;
+  color: WHITE !important;
+  -webkit-text-shadow: 0 0 1em WHITE;
+  -moz-text-shadow: 0 0 1em WHITE;
+  -ms-text-shadow: 0 0 1em WHITE;
+  -o-text-shadow: 0 0 1em WHITE;
+  text-shadow: 0 0 1em WHITE;
 }
 section > footer > nav > a,
 nav[data-control=groupbar] > a {
@@ -240,25 +232,9 @@ nav[data-control=groupbar] > a {
   -o-transition: box-shadow 400ms ease;
   transition: box-shadow 400ms ease;
 }
-section > footer > nav > a > .icon,
-nav[data-control=groupbar] > a > .icon {
-  -webkit-transition: text-shadow 400ms ease;
-  -moz-transition: text-shadow 400ms ease;
-  -ms-transition: text-shadow 400ms ease;
-  -o-transition: text-shadow 400ms ease;
-  transition: text-shadow 400ms ease;
-}
 section > footer > nav > a.active,
 nav[data-control=groupbar] > a.active {
   color: #fff;
-}
-section > footer > nav > a.active > .icon,
-nav[data-control=groupbar] > a.active > .icon {
-  -webkit-text-shadow: 0 0 2em #fff;
-  -moz-text-shadow: 0 0 2em #fff;
-  -ms-text-shadow: 0 0 2em #fff;
-  -o-text-shadow: 0 0 2em #fff;
-  text-shadow: 0 0 2em #fff;
 }
 section > nav[data-control=groupbar] > a.active {
   -webkit-box-shadow: inset 0 -3px 0 #3498db;
@@ -275,7 +251,7 @@ section > footer > nav > a.active {
   box-shadow: inset 0 3px #3498db;
 }
 nav[data-control=menu] {
-  background-color: rgba(0,0,0,0.8);
+  background-color: rgba(0,0,0,0.9);
   -webkit-box-shadow: 0 2px 0 rgba(0,0,0,0.15);
   -moz-box-shadow: 0 2px 0 rgba(0,0,0,0.15);
   -ms-box-shadow: 0 2px 0 rgba(0,0,0,0.15);
@@ -351,19 +327,19 @@ body > section > [data-control="pull"].splash {
   background: #3498db;
   color: #fff;
 }
-body > section.aside {
-  -webkit-box-shadow: -4px 0 2px rgba(0,0,0,0.15);
-  -moz-box-shadow: -4px 0 2px rgba(0,0,0,0.15);
-  -ms-box-shadow: -4px 0 2px rgba(0,0,0,0.15);
-  -o-box-shadow: -4px 0 2px rgba(0,0,0,0.15);
-  box-shadow: -4px 0 2px rgba(0,0,0,0.15);
+body > section.aside:not(.right) {
+  -webkit-box-shadow: -1px 0 8px rgba(0,0,0,0.15);
+  -moz-box-shadow: -1px 0 8px rgba(0,0,0,0.15);
+  -ms-box-shadow: -1px 0 8px rgba(0,0,0,0.15);
+  -o-box-shadow: -1px 0 8px rgba(0,0,0,0.15);
+  box-shadow: -1px 0 8px rgba(0,0,0,0.15);
 }
 body > section.aside.right {
-  -webkit-box-shadow: 2px 0 rgba(0,0,0,0.15);
-  -moz-box-shadow: 2px 0 rgba(0,0,0,0.15);
-  -ms-box-shadow: 2px 0 rgba(0,0,0,0.15);
-  -o-box-shadow: 2px 0 rgba(0,0,0,0.15);
-  box-shadow: 2px 0 rgba(0,0,0,0.15);
+  -webkit-box-shadow: 1px 0 8px rgba(0,0,0,0.15);
+  -moz-box-shadow: 1px 0 8px rgba(0,0,0,0.15);
+  -ms-box-shadow: 1px 0 8px rgba(0,0,0,0.15);
+  -o-box-shadow: 1px 0 8px rgba(0,0,0,0.15);
+  box-shadow: 1px 0 8px rgba(0,0,0,0.15);
 }
 body > section[data-pull] > article.active {
   -webkit-box-shadow: 0 -1px 0 rgba(0,0,0,0.05);
@@ -375,6 +351,11 @@ body > section[data-pull] > article.active {
 body > aside {
   background-color: #2a2a2a;
   color: WHITE;
+  -webkit-box-shadow: 0 0 0 6px #2a2a2a;
+  -moz-box-shadow: 0 0 0 6px #2a2a2a;
+  -ms-box-shadow: 0 0 0 6px #2a2a2a;
+  -o-box-shadow: 0 0 0 6px #2a2a2a;
+  box-shadow: 0 0 0 6px #2a2a2a;
 }
 body > aside > header,
 body > aside > footer {
@@ -411,29 +392,45 @@ body header .title {
  */
 article .button,
 article button {
-  color: #fff !important;
-  -webkit-font-smoothing: antialiased;
   -webkit-border-radius: 2px;
   -moz-border-radius: 2px;
   -ms-border-radius: 2px;
   -o-border-radius: 2px;
   border-radius: 2px;
+  -webkit-box-shadow: inset 0 -1px rgba(0,0,0,0.1), 0 1px rgba(0,0,0,0.075);
+  -moz-box-shadow: inset 0 -1px rgba(0,0,0,0.1), 0 1px rgba(0,0,0,0.075);
+  -ms-box-shadow: inset 0 -1px rgba(0,0,0,0.1), 0 1px rgba(0,0,0,0.075);
+  -o-box-shadow: inset 0 -1px rgba(0,0,0,0.1), 0 1px rgba(0,0,0,0.075);
+  box-shadow: inset 0 -1px rgba(0,0,0,0.1), 0 1px rgba(0,0,0,0.075);
+}
+article .button,
+article button,
+article .button abbr,
+article button abbr {
+  color: #fff;
+  font-weight: 600;
+  -webkit-text-shadow: 0 1px rgba(0,0,0,0.1);
+  -moz-text-shadow: 0 1px rgba(0,0,0,0.1);
+  -ms-text-shadow: 0 1px rgba(0,0,0,0.1);
+  -o-text-shadow: 0 1px rgba(0,0,0,0.1);
+  text-shadow: 0 1px rgba(0,0,0,0.1);
+  -webkit-font-smoothing: antialiased;
 }
 article .button:hover,
 article button:hover {
-  -webkit-box-shadow: inset 0 0 5em rgba(255,255,255,0.15);
-  -moz-box-shadow: inset 0 0 5em rgba(255,255,255,0.15);
-  -ms-box-shadow: inset 0 0 5em rgba(255,255,255,0.15);
-  -o-box-shadow: inset 0 0 5em rgba(255,255,255,0.15);
-  box-shadow: inset 0 0 5em rgba(255,255,255,0.15);
+  -webkit-box-shadow: inset 0 0 5em rgba(0,0,0,0.1), inset 0 -1px rgba(0,0,0,0.15), 0 1px rgba(0,0,0,0.075);
+  -moz-box-shadow: inset 0 0 5em rgba(0,0,0,0.1), inset 0 -1px rgba(0,0,0,0.15), 0 1px rgba(0,0,0,0.075);
+  -ms-box-shadow: inset 0 0 5em rgba(0,0,0,0.1), inset 0 -1px rgba(0,0,0,0.15), 0 1px rgba(0,0,0,0.075);
+  -o-box-shadow: inset 0 0 5em rgba(0,0,0,0.1), inset 0 -1px rgba(0,0,0,0.15), 0 1px rgba(0,0,0,0.075);
+  box-shadow: inset 0 0 5em rgba(0,0,0,0.1), inset 0 -1px rgba(0,0,0,0.15), 0 1px rgba(0,0,0,0.075);
 }
 article .button:active,
 article button:active {
-  -webkit-box-shadow: inset 0 0 5em rgba(0,0,0,0.3);
-  -moz-box-shadow: inset 0 0 5em rgba(0,0,0,0.3);
-  -ms-box-shadow: inset 0 0 5em rgba(0,0,0,0.3);
-  -o-box-shadow: inset 0 0 5em rgba(0,0,0,0.3);
-  box-shadow: inset 0 0 5em rgba(0,0,0,0.3);
+  -webkit-box-shadow: inset 0 0 5em rgba(0,0,0,0.2), inset 0 1px rgba(0,0,0,0.2);
+  -moz-box-shadow: inset 0 0 5em rgba(0,0,0,0.2), inset 0 1px rgba(0,0,0,0.2);
+  -ms-box-shadow: inset 0 0 5em rgba(0,0,0,0.2), inset 0 1px rgba(0,0,0,0.2);
+  -o-box-shadow: inset 0 0 5em rgba(0,0,0,0.2), inset 0 1px rgba(0,0,0,0.2);
+  box-shadow: inset 0 0 5em rgba(0,0,0,0.2), inset 0 1px rgba(0,0,0,0.2);
 }
 article .button .icon,
 article button .icon {
@@ -946,55 +943,49 @@ form [data-control-checkbox].icon.ok:after,
   color: #fff;
 }
 .notification:not(.push) {
-  background-color: rgba(0,0,0,0.6);
+  background-color: rgba(0,0,0,0.5);
 }
-.notification .window:not(.push):not(.growl) {
-  -webkit-border-radius: 4px 4px 0 0;
-  -moz-border-radius: 4px 4px 0 0;
-  -ms-border-radius: 4px 4px 0 0;
-  -o-border-radius: 4px 4px 0 0;
-  border-radius: 4px 4px 0 0;
+.notification .window {
+  -webkit-box-shadow: 0 0 0 3px rgba(0,0,0,0.1);
+  -moz-box-shadow: 0 0 0 3px rgba(0,0,0,0.1);
+  -ms-box-shadow: 0 0 0 3px rgba(0,0,0,0.1);
+  -o-box-shadow: 0 0 0 3px rgba(0,0,0,0.1);
+  box-shadow: 0 0 0 3px rgba(0,0,0,0.1);
 }
 .notification .window.growl {
-  -webkit-border-radius: 2px;
-  -moz-border-radius: 2px;
-  -ms-border-radius: 2px;
-  -o-border-radius: 2px;
-  border-radius: 2px;
   background-color: rgba(0,0,0,0.8);
 }
 .notification .window.growl strong {
   color: #bfbfbf;
   font-weight: 700;
 }
-.notification .window:not(.growl) {
-  -webkit-box-shadow: 0 0 1em #f5f5f5;
-  -moz-box-shadow: 0 0 1em #f5f5f5;
-  -ms-box-shadow: 0 0 1em #f5f5f5;
-  -o-box-shadow: 0 0 1em #f5f5f5;
-  box-shadow: 0 0 1em #f5f5f5;
-}
 .notification .window.confirm button,
-.notification .window.html button,
-.notification .window.confirm .button,
-.notification .window.html .button {
+.notification .window.html button {
   background-color: #fff;
-  color: #3498db;
+  color: #3d3d3d;
   font-weight: 400;
 }
-.notification .window.html {
-  background-color: #fefefe;
-  color: #f7f7f7;
+.notification .window.confirm button[data-callback=cancel],
+.notification .window.html button[data-callback=cancel],
+.notification .window.confirm button[data-action=close],
+.notification .window.html button[data-action=close] {
+  color: #e74c3c;
 }
+.notification .window.html,
 .notification .window.confirm {
-  background-color: #3498db;
+  background-color: #f4f4f4;
+  color: #000;
 }
-.notification .window.confirm > small {
-  color: #cce5f6;
+.notification .window.confirm > small,
+.notification .window.confirm > .icon {
+  color: #808080;
+}
+.notification .window.confirm > button:nth-child(1) {
+  color: #e74c3c !important;
 }
 .notification .window.error,
 .notification .window.success {
-  background-color: #f4f4f4;
+  background-color: rgba(0,0,0,0.8);
   border-bottom: solid 0.4em;
   color: #fff;
 }
@@ -1017,11 +1008,6 @@ form [data-control-checkbox].icon.ok:after,
 .notification .window.html .title {
   background-color: #3498db;
   color: #fff;
-  -webkit-border-radius: 2px 2px 0 0;
-  -moz-border-radius: 2px 2px 0 0;
-  -ms-border-radius: 2px 2px 0 0;
-  -o-border-radius: 2px 2px 0 0;
-  border-radius: 2px 2px 0 0;
 }
 .notification .window.push {
   background-color: #f4f4f4;
@@ -1031,9 +1017,8 @@ form [data-control-checkbox].icon.ok:after,
   -o-box-shadow: inset 0 -0.1em #000;
   box-shadow: inset 0 -0.1em #000;
 }
-.notification .window button:last-child,
-.notification .window .button:last-child {
-  border-radius00: 4px 4px;
+.notification .window small {
+  font-weight: 300;
 }
 
 /**
@@ -1047,15 +1032,32 @@ form [data-control-checkbox].icon.ok:after,
 /* =================================  TAG  ================================= */
 .tag:not(.icon) {
   color: #fff;
-  font-weight: 400;
+  font-weight: bold;
+  -webkit-text-shadow: 0 1px rgba(0,0,0,0.25);
+  -moz-text-shadow: 0 1px rgba(0,0,0,0.25);
+  -ms-text-shadow: 0 1px rgba(0,0,0,0.25);
+  -o-text-shadow: 0 1px rgba(0,0,0,0.25);
+  text-shadow: 0 1px rgba(0,0,0,0.25);
+}
+.tag:not(.icon):not(.count) {
+  -webkit-border-radius: 0.2em;
+  -moz-border-radius: 0.2em;
+  -ms-border-radius: 0.2em;
+  -o-border-radius: 0.2em;
+  border-radius: 0.2em;
 }
 .tag:not(.icon).count {
-  -webkit-border-radius: 1em;
-  -moz-border-radius: 1em;
-  -ms-border-radius: 1em;
-  -o-border-radius: 1em;
-  border-radius: 1em;
+  -webkit-border-radius: 0.3em;
+  -moz-border-radius: 0.3em;
+  -ms-border-radius: 0.3em;
+  -o-border-radius: 0.3em;
+  border-radius: 0.3em;
   background-color: #e74c3c;
+  -webkit-box-shadow: 0 0 1px rgba(0,0,0,0.25);
+  -moz-box-shadow: 0 0 1px rgba(0,0,0,0.25);
+  -ms-box-shadow: 0 0 1px rgba(0,0,0,0.25);
+  -o-box-shadow: 0 0 1px rgba(0,0,0,0.25);
+  box-shadow: 0 0 1px rgba(0,0,0,0.25);
 }
 /* =================================  PULL  =============================== */
 body > section > [data-control="pull"] {

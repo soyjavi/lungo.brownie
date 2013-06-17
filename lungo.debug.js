@@ -1,4 +1,3 @@
-
 /*
 Lungo - HTML5 Cross-Device Framework
 http://lungo.tapquo.com
@@ -36,7 +35,6 @@ Copyright (c) 2011-2013 Tapquo S.L. - Licensed GPLv3, Commercial
 
 }).call(this);
 
-
 /*
 Object with data-attributes (HTML5) with a special <markup>
 
@@ -49,7 +47,6 @@ Object with data-attributes (HTML5) with a special <markup>
 
 
 (function() {
-
   Lungo.Attributes = {
     count: {
       selector: "*",
@@ -95,7 +92,6 @@ Object with data-attributes (HTML5) with a special <markup>
 
 }).call(this);
 
-
 /*
 Temporary cache system
 
@@ -108,7 +104,6 @@ Temporary cache system
 
 
 (function() {
-
   Lungo.Cache = (function(lng) {
     var exists, get, remove, set, _cache;
     _cache = {};
@@ -183,7 +178,6 @@ Temporary cache system
 
 }).call(this);
 
-
 /*
 Object with data-attributes (HTML5) with a special <markup>
 
@@ -195,7 +189,6 @@ Object with data-attributes (HTML5) with a special <markup>
 
 
 (function() {
-
   Lungo.Constants = {
     ELEMENT: {
       SECTION: "section",
@@ -295,7 +288,6 @@ Object with data-attributes (HTML5) with a special <markup>
 
 }).call(this);
 
-
 /*
 Contains all the common functions used in Lungo.
 
@@ -308,7 +300,6 @@ Contains all the common functions used in Lungo.
 
 
 (function() {
-
   Lungo.Core = (function(lng, $$) {
     var ARRAY_PROTO, bind, environment, execute, findByProperty, isMobile, isOwnProperty, log, mix, orderByProperty, toArray, toType;
     ARRAY_PROTO = Array.prototype;
@@ -490,7 +481,6 @@ Contains all the common functions used in Lungo.
 
 }).call(this);
 
-
 /*
 LungoJS Dom Handler
 
@@ -510,13 +500,11 @@ Add an event listener
 
 
 (function() {
-
   Lungo.dom = function(selector) {
     return $$(selector);
   };
 
 }).call(this);
-
 
 /*
 Event Manager (with delegates)
@@ -529,7 +517,6 @@ Event Manager (with delegates)
 
 
 (function() {
-
   Lungo.Events = (function(lng) {
     var SPACE_CHAR, init;
     SPACE_CHAR = " ";
@@ -555,7 +542,6 @@ Event Manager (with delegates)
 
 }).call(this);
 
-
 /*
 ?
 
@@ -567,7 +553,6 @@ Event Manager (with delegates)
 
 
 (function() {
-
   Lungo.Fallback = (function(lng) {
     var fixPositionInAndroid;
     fixPositionInAndroid = function() {
@@ -583,7 +568,6 @@ Event Manager (with delegates)
 
 }).call(this);
 
-
 /*
 Instance initializer
 
@@ -595,7 +579,6 @@ Instance initializer
 
 
 (function() {
-
   Lungo.init = function(config) {
     var isPhone;
     Lungo.Config = config;
@@ -612,7 +595,6 @@ Instance initializer
 
 }).call(this);
 
-
 /*
 Notification system in CSS3
 
@@ -624,7 +606,6 @@ Notification system in CSS3
 
 
 (function() {
-
   Lungo.Notification = (function(lng) {
     var ATTRIBUTE, BINDING, DELAY_TIME, MARKUP_NOTIFICATION, SELECTOR, STYLE, TRANSITION, confirm, error, hide, html, push, show, success, _button_markup, _el, _hide, _init, _markup, _notify, _options, _show, _subscribeEvents, _window;
     _options = [];
@@ -714,7 +695,7 @@ Notification system in CSS3
 
     html = function(markup, button, style, seconds) {
       if (button) {
-        markup += "<a href=\"#\" class=\"button large anchor\" data-action=\"close\">" + button + "</a>";
+        markup += "<button class=\"anchor\" data-action=\"close\">" + button + "</button>";
       }
       _show(markup, "html " + style);
       return _hide(seconds);
@@ -804,7 +785,6 @@ Notification system in CSS3
 
 }).call(this);
 
-
 /*
 Load Resources
 
@@ -816,7 +796,6 @@ Load Resources
 
 
 (function() {
-
   Lungo.Resource = (function(lng, $$) {
     var ELEMENT, ERROR, load, _load, _loadSyncResource, _pushResourceInBody;
     ELEMENT = lng.Constants.ELEMENT;
@@ -847,9 +826,11 @@ Load Resources
     */
 
     _load = function(resource, container) {
+      var error;
       try {
         return _pushResourceInBody(_loadSyncResource(resource), container);
-      } catch (error) {
+      } catch (_error) {
+        error = _error;
         return lng.Core.log(3, error.message);
       }
     };
@@ -877,7 +858,6 @@ Load Resources
 }).call(this);
 
 (function() {
-
   (function(w, undefined_) {
     var canBeFilledWithPoly, classtext, closest, defaultEasing, doc, docElem, enable, enabled, intercept, overflowProbablyAlreadyWorks, timeKeeper, toss;
     doc = w.document;
@@ -1111,7 +1091,6 @@ Load Resources
 
 }).call(this);
 
-
 /*
 External Data & Services Manager
 
@@ -1125,7 +1104,6 @@ External Data & Services Manager
 
 
 (function() {
-
   Lungo.Service = (function(lng, $$) {
     var DATE_PATTERN, URL_CACHE_INDEX_KEY, cache, get, json, post, _calculateDiferenceTime, _calculateTimeSpent, _checkIsValidPattern, _saveServiceInCache, _urlCached;
     URL_CACHE_INDEX_KEY = "lungojs_service_cache";
@@ -1258,7 +1236,6 @@ External Data & Services Manager
 
 }).call(this);
 
-
 /*
 Handles the <sections> and <articles> to show
 
@@ -1272,7 +1249,6 @@ Handles the <sections> and <articles> to show
 
 
 (function() {
-
   Lungo.RouterPhone = (function(lng) {
     var C, HASHTAG, animationEnd, article, back, history, section, step, _animating, _history, _notCurrentTarget, _removeLast, _section, _setSectionDirections, _show, _updateNavigationElements, _url;
     C = lng.Constants;
@@ -1363,6 +1339,10 @@ Handles the <sections> and <articles> to show
       var direction;
       section = lng.dom(event.target);
       direction = section.data(C.ATTRIBUTE.DIRECTION);
+      if (section.data("original-transition")) {
+        section.data(C.TRANSITION.ATTR, section.data("original-transition"));
+        section.removeAttr("data-original-transition");
+      }
       if (direction === "out" || direction === "back-out") {
         section.removeClass(C.CLASS.SHOW);
       }
@@ -1423,6 +1403,13 @@ Handles the <sections> and <articles> to show
       }
       _animating = true;
       dirPrefix = backward ? "back-" : "";
+      if (!backward) {
+        current.data("original-transition", current.data(C.TRANSITION.ATTR));
+        current.data(C.TRANSITION.ATTR, future.data(C.TRANSITION.ATTR));
+      } else {
+        future.data("original-transition", future.data(C.TRANSITION.ATTR));
+        future.data(C.TRANSITION.ATTR, current.data(C.TRANSITION.ATTR));
+      }
       future.addClass(C.CLASS.SHOW);
       if (future.data(C.TRANSITION.ATTR)) {
         future.data(C.ATTRIBUTE.DIRECTION, "" + dirPrefix + "in");
@@ -1473,7 +1460,6 @@ Handles the <sections> and <articles> to show
 
 }).call(this);
 
-
 /*
 Handles the <sections> and <articles> to show on a tablet device
 
@@ -1485,7 +1471,6 @@ Handles the <sections> and <articles> to show on a tablet device
 
 
 (function() {
-
   Lungo.RouterTablet = (function(lng) {
     var C, HASHTAG, animationEnd, article, back, history, section, step, _animating, _applyDirection, _callbackSection, _checkAside, _fromCallback, _history, _isChild, _notCurrentTarget, _parentId, _removeLast, _sameSection, _show, _showAside, _showBackward, _showForward, _showFuture, _updateNavigationElements, _url;
     C = lng.Constants;
@@ -1571,6 +1556,7 @@ Handles the <sections> and <articles> to show on a tablet device
       if (target.length > 0) {
         section = target.closest(C.ELEMENT.SECTION);
         lng.Router.section(section.attr("id"));
+        section = lng.Element.Cache.section;
         section.children("" + C.ELEMENT.ARTICLE + "." + C.CLASS.ACTIVE).removeClass(C.CLASS.ACTIVE).trigger(C.TRIGGER.UNLOAD);
         lng.Element.Cache.article.removeClass(C.CLASS.ACTIVE).trigger(C.TRIGGER.UNLOAD);
         lng.Element.Cache.article = target.addClass(C.CLASS.ACTIVE).trigger(C.TRIGGER.LOAD);
@@ -1660,14 +1646,11 @@ Handles the <sections> and <articles> to show on a tablet device
     };
     _showFuture = function(future) {
       var current, currentHasAside, _ref, _ref1;
-      console.error("Show future --> ", future.attr("id"), "curr->", lng.Element.Cache.section);
       lng.Element.Cache.dump();
       current = lng.Element.Cache.section;
       lng.Section.show(void 0, future);
       currentHasAside = ((_ref = lng.Element.Cache.section) != null ? _ref.data("aside") : void 0) != null;
-      console.error("has asside -->", currentHasAside);
       if (!_fromCallback || !((_ref1 = lng.Element.Cache.section) != null ? _ref1.data("aside") : void 0)) {
-        console.error('por aqui');
         future.addClass(C.CLASS.SHOW);
       } else {
         _applyDirection(future, "in");
@@ -1696,7 +1679,6 @@ Handles the <sections> and <articles> to show on a tablet device
       _applyDirection(current, "back-out");
       showSections = lng.dom("section." + C.CLASS.SHOW + ":not(#" + (current.attr('id')) + ")");
       if (showSections.length === 1 && (showSections.first().data("children") != null)) {
-        console.error("Show aside -->", showSections.first().data("aside"));
         lng.Aside.show(showSections.first().data("aside"));
       }
       return _callbackSection = future;
@@ -1817,7 +1799,6 @@ Handles the <sections> and <articles> to show on a tablet device
 
 }).call(this);
 
-
 /*
 Initialize the <articles> layout of a certain <section>
 
@@ -1829,7 +1810,6 @@ Initialize the <articles> layout of a certain <section>
 
 
 (function() {
-
   Lungo.Aside = (function(lng) {
     var C, animationEnd, draggable, hide, show, showFix, toggle, _alreadyOpen, _asideStylesheet, _callback, _customAsideAnimation, _phoneCustomAnimation;
     C = lng.Constants;
@@ -2050,7 +2030,6 @@ Initialize the <articles> layout of a certain <section>
 
 }).call(this);
 
-
 /*
 Initialize the <articles> layout of a certain <section>
 
@@ -2062,7 +2041,6 @@ Initialize the <articles> layout of a certain <section>
 
 
 (function() {
-
   Lungo.Section = (function(lng) {
     var C, show, _phone, _tablet;
     C = lng.Constants;
@@ -2101,7 +2079,6 @@ Initialize the <articles> layout of a certain <section>
 
 }).call(this);
 
-
 /*
 Initialize the <articles> layout of a certain <section>
 
@@ -2113,7 +2090,6 @@ Initialize the <articles> layout of a certain <section>
 
 
 (function() {
-
   Lungo.Article = (function(lng) {
     var C, clean;
     C = lng.Constants;
@@ -2153,7 +2129,6 @@ Initialize the <articles> layout of a certain <section>
 
 }).call(this);
 
-
 /*
 Make an analysis of Data attributes in HTML elements and creates a <markup>
 based on each data type.
@@ -2168,7 +2143,6 @@ based on each data type.
 
 
 (function() {
-
   Lungo.Boot.Data = (function(lng) {
     var BINDING, init, _bindDataAttribute, _findDataAttributesIn, _findElements;
     BINDING = lng.Constants.BINDING;
@@ -2219,7 +2193,6 @@ based on each data type.
 
 }).call(this);
 
-
 /*
 @todo
 
@@ -2231,7 +2204,6 @@ based on each data type.
 
 
 (function() {
-
   Lungo.Boot.Device = (function(lng) {
     var DEVICE, init;
     DEVICE = lng.Constants.DEVICE;
@@ -2260,7 +2232,6 @@ based on each data type.
 
 }).call(this);
 
-
 /*
 Initialize the automatic DOM UI events
 
@@ -2274,7 +2245,6 @@ Initialize the automatic DOM UI events
 
 
 (function() {
-
   Lungo.Boot.Events = (function(lng) {
     var ATTRIBUTE, C, CLASS, ELEMENT, QUERY, init, _changeCheckboxValue, _closeMenu, _onArticle, _onAside, _onAsyncResource, _onMenu, _onSection, _transitionEnd;
     C = lng.Constants;
@@ -2407,7 +2377,6 @@ Initialize the automatic DOM UI events
 
 }).call(this);
 
-
 /*
 Initialize the Layout of LungoJS (if it's a mobile environment)
 
@@ -2419,7 +2388,6 @@ Initialize the Layout of LungoJS (if it's a mobile environment)
 
 
 (function() {
-
   Lungo.Boot.Layout = (function(lng) {
     var C, HASHTAG, init, _createListElement, _initElement, _initSection, _initSectionbyUrl, _scrollFix;
     C = lng.Constants;
@@ -2505,7 +2473,6 @@ Initialize the Layout of LungoJS (if it's a mobile environment)
 
 }).call(this);
 
-
 /*
 DOM Elements caching
 
@@ -2517,7 +2484,6 @@ DOM Elements caching
 
 
 (function() {
-
   Lungo.Element.Cache = {
     section: null,
     article: null,
@@ -2538,7 +2504,6 @@ DOM Elements caching
 
 }).call(this);
 
-
 /*
 Creates a instance of Carousel Element
 
@@ -2552,7 +2517,6 @@ Creates a instance of Carousel Element
 
 
 (function() {
-
   Lungo.Element.Carousel = function(element, callback) {
     var next, position, prev, refresh, _handleGestures, _instance, _setup, _slide, _touchEnd, _touchMove, _touchStart, _transitionEnd;
     _instance = {
@@ -2685,7 +2649,6 @@ Creates a instance of Carousel Element
 
 }).call(this);
 
-
 /*
 Set a counter to the element
 
@@ -2700,7 +2663,6 @@ Set a counter to the element
 
 
 (function() {
-
   Lungo.Element.count = function(selector, count) {
     var binding, element, html;
     element = Lungo.dom(selector);
@@ -2716,7 +2678,6 @@ Set a counter to the element
 
 }).call(this);
 
-
 /*
 Creates a loading element in any area of layout
 
@@ -2731,7 +2692,6 @@ Creates a loading element in any area of layout
 
 
 (function() {
-
   Lungo.Element.loading = function(selector, stylesheet) {
     var binding, element, html;
     element = Lungo.dom(selector);
@@ -2747,7 +2707,6 @@ Creates a loading element in any area of layout
 
 }).call(this);
 
-
 /*
 Set a progress to the element
 
@@ -2762,7 +2721,6 @@ Set a progress to the element
 
 
 (function() {
-
   Lungo.Element.progress = function(selector, percentage) {
     var element;
     element = Lungo.dom(selector);
@@ -2773,7 +2731,6 @@ Set a progress to the element
   };
 
 }).call(this);
-
 
 /*
 Creates a instance of Pull & Refresh Element
@@ -2788,7 +2745,6 @@ Creates a instance of Pull & Refresh Element
 
 
 (function() {
-
   Lungo.Element.Pull = function(element_selector, config_data) {
     var ANIMATION_TIME, CONFIG, CONFIG_BASE, CONTAINER, CURRENT_DISTANCE, ELEMENT, MAX_HEIGHT, REFRESHING, REFRESHING_HEIGHT, hide, _blockGestures, _getTouchY, _handlePullEnd, _handlePulling, _moveElementTo, _refreshStart, _setContainerLoading, _setContainerOnPulling, _setContainerTitle;
     REFRESHING_HEIGHT = 68;
