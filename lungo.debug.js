@@ -76,10 +76,6 @@ Object with data-attributes (HTML5) with a special <markup>
       selector: "header",
       html: "<h1 class=\"title centered\">{{value}}</h1>"
     },
-    "control-checkbox": {
-      selector: "*",
-      html: "<input type=\"checkbox\" value=\"None\" id=\"{{value}}\" />\n<label for=\"{{value}}\"></label>"
-    },
     loading: {
       selector: "*",
       html: "<div class=\"loading {{value}}\">\n  <span class=\"top\"></span>\n  <span class=\"right\"></span>\n  <span class=\"bottom\"></span>\n  <span class=\"left\"></span>\n</div>"
@@ -1274,9 +1270,8 @@ Handles the <sections> and <articles> to show
           _section(future, current);
           lng.Router.step(section_id);
           if (Lungo.Config.history !== false) {
-            _url();
+            return _url();
           }
-          return _updateNavigationElements();
         }
       } else if (lng.Element.Cache.aside) {
         return lng.Aside.hide();
@@ -1379,7 +1374,8 @@ Handles the <sections> and <articles> to show
         backward = false;
       }
       callback = function() {
-        return _show(future, current, backward);
+        _show(future, current, backward);
+        return _updateNavigationElements();
       };
       if (lng.Element.Cache.aside) {
         return lng.Aside.hide(callback);
@@ -1388,10 +1384,10 @@ Handles the <sections> and <articles> to show
       }
     };
     _show = function(future, current, backward) {
+      lng.Section.show(current, future);
       if (current != null) {
-        _setSectionDirections(future, current, backward);
+        return _setSectionDirections(future, current, backward);
       }
-      return lng.Section.show(current, future);
     };
     _setSectionDirections = function(future, current, backward) {
       var dirPrefix;
@@ -1733,8 +1729,14 @@ Handles the <sections> and <articles> to show on a tablet device
         apply = true;
       }
       if (apply) {
-        section.addClass(C.CLASS.SHOW);
-        if (section.data(C.TRANSITION.ATTR)) {
+        if (isForward) {
+          section.addClass(C.CLASS.HIDE);
+          section.addClass(C.CLASS.SHOW);
+          return setTimeout((function() {
+            return section.data(C.ATTRIBUTE.DIRECTION, direction).removeClass(C.CLASS.HIDE);
+          }), 10);
+        } else {
+          section.addClass(C.CLASS.SHOW);
           return section.data(C.ATTRIBUTE.DIRECTION, direction);
         }
       }
@@ -1745,7 +1747,11 @@ Handles the <sections> and <articles> to show on a tablet device
         return true;
       }
       dispacher_section = lng.dom(event.target).closest("section,aside");
-      same = dispacher_section.attr("id") === lng.Element.Cache.section.attr("id");
+      if (dispacher_section.length) {
+        same = dispacher_section.attr("id") === lng.Element.Cache.section.attr("id");
+      } else {
+        same = true;
+      }
       return same;
     };
     _notCurrentTarget = function(current, id) {
@@ -1848,7 +1854,7 @@ Initialize the <articles> layout of a certain <section>
             for (_i = 0, _len = childs.length; _i < _len; _i++) {
               child = childs[_i];
               child = lng.dom(C.ELEMENT.SECTION + "#" + child);
-              if (child.hasClass(C.CLASS.SHOW)) {
+              if (child.length && child.hasClass(C.CLASS.SHOW)) {
                 child.addClass("shadowing");
               }
             }
@@ -2246,7 +2252,7 @@ Initialize the automatic DOM UI events
 
 (function() {
   Lungo.Boot.Events = (function(lng) {
-    var ATTRIBUTE, C, CLASS, ELEMENT, QUERY, init, _changeCheckboxValue, _closeMenu, _onArticle, _onAside, _onAsyncResource, _onMenu, _onSection, _transitionEnd;
+    var ATTRIBUTE, C, CLASS, ELEMENT, QUERY, init, _closeMenu, _onArticle, _onAside, _onAsyncResource, _onMenu, _onSection, _transitionEnd;
     C = lng.Constants;
     ATTRIBUTE = lng.Constants.ATTRIBUTE;
     CLASS = lng.Constants.CLASS;
@@ -2267,7 +2273,6 @@ Initialize the automatic DOM UI events
       lng.dom(C.QUERY.ASIDE_ROUTER).touch(_onAside);
       lng.dom(C.QUERY.MENU_ROUTER).touch(_onMenu);
       lng.dom(QUERY.MENU_HREF).touch(_closeMenu);
-      lng.dom(QUERY.CONTROL_CHECKBOX).on(C.EVENT.CHANGE, _changeCheckboxValue);
       _ref = C.EVENT.TRANSITION_END;
       _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
@@ -2345,18 +2350,6 @@ Initialize the automatic DOM UI events
       el = lng.dom(this);
       parent = el.parent("[data-control=menu]").removeClass(CLASS.SHOW).attr(C.ATTRIBUTE.ID);
       return lng.dom("[data-view-menu=" + parent + "] > .icon").attr("class", "icon " + el.data("icon"));
-    };
-    _changeCheckboxValue = function(event) {
-      var checked, el, input;
-      event.preventDefault();
-      el = lng.dom(this);
-      input = el.find("input");
-      checked = input[0].checked;
-      input.val(checked.toString());
-      el.removeClass("checked");
-      if (checked) {
-        return el.addClass("checked");
-      }
     };
     _transitionEnd = function(event) {
       var asideRelated, hasDirection, section, shadowRelated;
