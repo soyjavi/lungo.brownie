@@ -171,7 +171,7 @@ aside .list li a:not(.active) .tag:not(.icon) {
 }
 aside .list li.active .tag:not(.icon),
 aside .list li a.active .tag:not(.icon) {
-  background-color: #0095c1;
+  background-color: #444;
 }
 aside .list li .icon {
   color: #c1c1c1;
