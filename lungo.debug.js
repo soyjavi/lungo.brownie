@@ -190,11 +190,13 @@ Object with data-attributes (HTML5) with a special <markup>
       SECTION: "section",
       ARTICLE: "article",
       ASIDE: "aside",
-      MENU: "menu",
       BODY: "body",
       DIV: "div",
       LIST: "<ul></ul>",
       LI: "li"
+    },
+    CONTROL: {
+      MENU: "[data-control=menu]"
     },
     QUERY: {
       ARTICLE_ROUTER: "[data-view-article]",
@@ -649,6 +651,8 @@ Notification system in CSS3
       return _hide(seconds, callback);
     };
     /*
+    Hides the current notification.
+    @method   hide
     */
 
     hide = function() {
@@ -658,6 +662,8 @@ Notification system in CSS3
       }), TRANSITION.DURATION / 2);
     };
     /*
+    @method   confirm
+    @param    {object} the notification's config.
     */
 
     confirm = function(options) {
@@ -669,6 +675,13 @@ Notification system in CSS3
       return _show(markup, "confirm");
     };
     /*
+    Shows an success notification.
+    @method   show
+    @param    {string} Notification's title.
+    @param    {string} Notification's description.
+    @param    {string} The icon, null for no icon.
+    @param    {number} The time to show the notification, 0 for unlimited.
+    @param    {function} A function to execute when hiding the notification.
     */
 
     success = function(title, description, icon, seconds, callback) {
@@ -678,6 +691,13 @@ Notification system in CSS3
       return _notify(title, description, icon, "success", seconds, callback);
     };
     /*
+    Shows an error notification.
+    @method   hide
+    @param    {string} Notification's title.
+    @param    {string} Notification's description.
+    @param    {string} The icon, null for no icon.
+    @param    {number} The time to show the notification, 0 for unlimited.
+    @param    {function} A function to execute when hiding the notification.
     */
 
     error = function(title, description, icon, seconds, callback) {
@@ -687,6 +707,12 @@ Notification system in CSS3
       return _notify(title, description, icon, "error", seconds, callback);
     };
     /*
+    Creates a notification using your own html code.
+    @method   html
+    @param    {string} The html code for the notification.
+    @param    {string} The closing button text.
+    @param    {string} Specific style for notification
+    @param    {number} The time to show the notification, 0 for unlimited.
     */
 
     html = function(markup, button, style, seconds) {
@@ -697,6 +723,11 @@ Notification system in CSS3
       return _hide(seconds);
     };
     /*
+    Creates a non-obstructive notification
+    @method   hide
+    @param    {string} Notification's title.
+    @param    {string} The icon, null for no icon.
+    @param    {string} Specific style for notification
     */
 
     push = function(title, icon, style) {
@@ -1642,7 +1673,6 @@ Handles the <sections> and <articles> to show on a tablet device
     };
     _showFuture = function(future) {
       var current, currentHasAside, _ref, _ref1;
-      lng.Element.Cache.dump();
       current = lng.Element.Cache.section;
       lng.Section.show(void 0, future);
       currentHasAside = ((_ref = lng.Element.Cache.section) != null ? _ref.data("aside") : void 0) != null;
@@ -1694,11 +1724,9 @@ Handles the <sections> and <articles> to show on a tablet device
       }
     };
     _showAside = function(aside_id, target) {
-      if (target.data("children")) {
-        return lng.Aside.show(aside_id);
-      } else {
-        return lng.Aside.showFix(aside_id);
-      }
+      var fixed;
+      fixed = target.data("children") ? false : true;
+      return lng.Aside.show(aside_id, fixed);
     };
     _parentId = function(section) {
       var parent;
@@ -1817,82 +1845,67 @@ Initialize the <articles> layout of a certain <section>
 
 (function() {
   Lungo.Aside = (function(lng) {
-    var C, animationEnd, draggable, hide, show, showFix, toggle, _alreadyOpen, _asideStylesheet, _callback, _customAsideAnimation, _phoneCustomAnimation;
+    var C, animationEnd, draggable, hide, show, toggle, _alreadyOpen, _asideStylesheet, _callback, _customAsideAnimation;
     C = lng.Constants;
     _callback = void 0;
     _customAsideAnimation = void 0;
     /*
-    Display an aside element with a particular <section>
+    Display an aside element
     @method show
+    
+    @param    {string} <aside> Id
     */
 
-    show = function(aside_id, animate_section, fromX) {
-      var aside, aside_section, aside_transition, child, childs, _i, _len, _ref;
-      if (animate_section == null) {
-        animate_section = true;
-      }
-      if (fromX == null) {
-        fromX = 0;
+    show = function(aside_id, fixed) {
+      var aside, aside_section, aside_transition, child, childs, childsild, fromX, _i, _len, _ref;
+      if (fixed == null) {
+        fixed = false;
       }
       aside = lng.dom("#" + aside_id);
-      if (aside.length && !_alreadyOpen(aside_id)) {
-        lng.Element.Cache.aside = aside;
-        if (lng.DEVICE === C.DEVICE.PHONE) {
-          aside_transition = aside.data(C.TRANSITION.ATTR) || "left";
-          aside.addClass(C.CLASS.SHOW);
-          if (fromX) {
-            return _phoneCustomAnimation(fromX, false);
-          } else {
+      if (aside.length) {
+        if (!fixed && !_alreadyOpen(aside_id)) {
+          fromX = 0;
+          lng.Element.Cache.aside = aside;
+          if (lng.DEVICE === C.DEVICE.PHONE) {
+            aside.addClass(C.CLASS.SHOW);
+            aside_transition = aside.data(C.TRANSITION.ATTR) || "left";
             return lng.Element.Cache.section.data("aside-" + aside_transition, "show");
-          }
-        } else {
-          aside.addClass(C.CLASS.SHOW);
-          aside_section = lng.dom("[data-aside=" + aside_id + "][data-children]");
-          if (aside_section.attr("id") !== ((_ref = lng.Element.Cache.section) != null ? _ref.attr("id") : void 0)) {
-            lng.Element.Cache.section.addClass("shadowing");
-            childs = aside_section.data("children").split(" ");
-            for (_i = 0, _len = childs.length; _i < _len; _i++) {
-              child = childs[_i];
-              child = lng.dom(C.ELEMENT.SECTION + "#" + child);
-              if (child.length && child.hasClass(C.CLASS.SHOW)) {
-                child.addClass("shadowing");
+          } else {
+            aside.addClass(C.CLASS.SHOW);
+            aside_section = lng.dom("[data-aside=" + aside_id + "][data-children]");
+            if (aside_section.attr("id") !== ((_ref = lng.Element.Cache.section) != null ? _ref.attr("id") : void 0)) {
+              lng.Element.Cache.section.addClass("shadowing");
+              childs = aside_section.data("children").split(" ");
+              for (_i = 0, _len = childs.length; _i < _len; _i++) {
+                childsild = childs[_i];
+                child = lng.dom(C.ELEMENT.SECTION + "#" + child);
+                if (child.length && child.hasClass(C.CLASS.SHOW)) {
+                  child.addClass("shadowing");
+                }
               }
             }
+            return aside_section.removeClass("aside").addClass("asideShowing");
           }
-          return aside_section.removeClass("aside").addClass("asideShowing");
+        } else {
+          lng.Element.Cache.aside = aside;
+          return aside.addClass(C.CLASS.SHOW).addClass("box");
         }
       }
     };
     /*
-    Shows a fixed aside (not able to hide cause section have not children)
+    Hide current aside element
     @method hide
+    @param    {function} Callback
     */
 
-    showFix = function(aside_id) {
-      var aside;
-      aside = lng.dom("#" + aside_id);
-      if (aside.length) {
-        lng.Element.Cache.aside = aside;
-        return aside.addClass(C.CLASS.SHOW).addClass("box");
-      }
-    };
-    /*
-    Hide an aside element with a particular section
-    @method hide
-    */
-
-    hide = function(callback, fromX) {
+    hide = function(callback) {
       var aside_transition;
       if (lng.Element.Cache.aside) {
         _callback = callback;
         aside_transition = lng.Element.Cache.aside.data(C.TRANSITION.ATTR) || "left";
         if (lng.DEVICE === C.DEVICE.PHONE) {
           lng.Element.Cache.section.removeClass("aside").removeClass("aside-right");
-          if (fromX) {
-            return _phoneCustomAnimation(fromX, true);
-          } else {
-            return lng.Element.Cache.section.data("aside-" + aside_transition, "hide");
-          }
+          return lng.Element.Cache.section.data("aside-" + aside_transition, "hide");
         } else {
           lng.dom(".aside").removeClass("aside").addClass("asideHidding");
           lng.Element.Cache.aside = null;
@@ -1913,9 +1926,9 @@ Initialize the <articles> layout of a certain <section>
 
     toggle = function(aside) {
       if (lng.Element.Cache.aside) {
-        return lng.Aside.hide();
+        return this.hide();
       } else {
-        return lng.Aside.show(aside);
+        return this.show(aside);
       }
     };
     /*
@@ -2008,27 +2021,10 @@ Initialize the <articles> layout of a certain <section>
         return "  ";
       }
     };
-    _phoneCustomAnimation = function(fromX, hide) {
-      var kfStyle;
-      if (hide == null) {
-        hide = false;
-      }
-      if (hide) {
-        kfStyle = document.createTextNode("@-webkit-keyframes asideCustomKF {\n  0%   { -webkit-transform: translateX(" + fromX + "px); }\n  40%  { -webkit-transform: translateX(" + (fromX + 8) + "px); }\n  100% { -webkit-transform: translateX(0); }\n}");
-      } else {
-        kfStyle = document.createTextNode("@-webkit-keyframes asideCustomKF {\n  0%   { -webkit-transform: translateX(" + fromX + "px); }\n  60%  { -webkit-transform: translateX(" + (C.ASIDE.NORMAL + 8) + "px); }\n  100% { -webkit-transform: translateX(" + C.ASIDE.NORMAL + "px); }\n}");
-      }
-      _customAsideAnimation = document.createElement('style');
-      _customAsideAnimation.type = 'text/css';
-      _customAsideAnimation.appendChild(kfStyle);
-      document.getElementsByTagName("head")[0].appendChild(_customAsideAnimation);
-      return lng.Element.Cache.section.style("-webkit-animation-name", "asideCustomKF");
-    };
     return {
-      toggle: toggle,
       show: show,
-      showFix: showFix,
       hide: hide,
+      toggle: toggle,
       draggable: draggable,
       animationEnd: animationEnd
     };
@@ -2339,17 +2335,18 @@ Initialize the automatic DOM UI events
       return lng.Aside.toggle(aside_id);
     };
     _onMenu = function(event) {
-      var menu_id;
+      var id;
       event.preventDefault();
-      menu_id = lng.dom(this).data("view-menu");
-      return lng.dom("[data-control=menu]#" + menu_id).toggleClass(CLASS.SHOW);
+      id = lng.dom(this).data("view-menu");
+      return lng.Element.Menu.show(id);
     };
     _closeMenu = function(event) {
-      var el, parent;
+      var el, id;
       event.preventDefault();
       el = lng.dom(this);
-      parent = el.parent("[data-control=menu]").removeClass(CLASS.SHOW).attr(C.ATTRIBUTE.ID);
-      return lng.dom("[data-view-menu=" + parent + "] > .icon").attr("class", "icon " + el.data("icon"));
+      id = el.parent(C.CONTROL.MENU).attr(C.ATTRIBUTE.ID);
+      lng.Element.Menu.hide(id);
+      return lng.dom("[data-view-menu=" + id + "] > .icon").attr("class", "icon " + el.data("icon"));
     };
     _transitionEnd = function(event) {
       var asideRelated, hasDirection, section, shadowRelated;
@@ -2481,18 +2478,7 @@ DOM Elements caching
     section: null,
     article: null,
     aside: null,
-    navigation: null,
-    dump: function() {
-      var txt, _ref, _ref1, _ref2, _ref3;
-      txt = "";
-      txt += "================ cache data ================\n";
-      txt += " SECTION:    " + ((_ref = this.section) != null ? _ref.attr('id') : void 0) + "\n";
-      txt += " ARTICLE:    " + ((_ref1 = this.article) != null ? _ref1.attr('id') : void 0) + "\n";
-      txt += " ASIDE:      " + ((_ref2 = this.aside) != null ? _ref2.attr('id') : void 0) + "\n";
-      txt += " NAVIGATION: " + ((_ref3 = this.navigation) != null ? _ref3.attr('id') : void 0) + "\n";
-      txt += "============================================\n";
-      return console.error(txt);
-    }
+    navigation: null
   };
 
 }).call(this);
@@ -2697,6 +2683,75 @@ Creates a loading element in any area of layout
       return element.html(html);
     }
   };
+
+}).call(this);
+
+/*
+Set a progress to the element
+
+@namespace Lungo.Element
+@method Menu
+
+@author Javier Jimenez Villar <javi@tapquo.com> || @soyjavi
+*/
+
+
+(function() {
+  Lungo.Element.Menu = (function(lng) {
+    var C, hide, show, toggle;
+    C = lng.Constants;
+    /*
+    Displays the <data-control-menu> with a determinate Id
+    @method   show
+    @param    {string} <data-control-menu> Id
+    */
+
+    show = function(id) {
+      var element;
+      element = this._instance(id);
+      if (element) {
+        return element.addClass(C.CLASS.SHOW);
+      }
+    };
+    /*
+    Hides the <data-control-menu> with a determinate Id
+    @method   hide
+    @param    {string} <data-control-menu> Id
+    */
+
+    hide = function(id) {
+      var element;
+      element = this._instance(id);
+      if (element) {
+        return element.removeClass(C.CLASS.SHOW);
+      }
+    };
+    /*
+    Toggles the <data-control-menu> with a determinate Id
+    @method   toggle
+    @param    {string} <data-control-menu> Id
+    */
+
+    toggle = function(id) {
+      var element;
+      element = this._instance(id);
+      if (element) {
+        if (element.hasClass(C.CLASS.SHOW)) {
+          return this.show(id);
+        } else {
+          return this.hide(id);
+        }
+      }
+    };
+    return {
+      _instance: function(id) {
+        return Lungo.dom("" + C.CONTROL.MENU + "#" + id);
+      },
+      show: show,
+      hide: hide,
+      toggle: toggle
+    };
+  })(Lungo);
 
 }).call(this);
 

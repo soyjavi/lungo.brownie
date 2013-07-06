@@ -283,11 +283,12 @@ nav[data-control=menu] {
   -o-box-shadow: 0 2px 0 rgba(0,0,0,0.1);
   box-shadow: 0 2px 0 rgba(0,0,0,0.1);
 }
-nav[data-control=menu].icons > a > .icon {
-  color: #fff;
-}
+nav[data-control=menu].icons > a,
 nav[data-control=menu].icons > a > abbr {
   color: #595959;
+}
+nav[data-control=menu].icons > a > .icon {
+  color: #fff;
 }
 nav[data-control=menu].icons > a:active > .icon,
 nav[data-control=menu].icons > a:hover > .icon {
@@ -297,11 +298,12 @@ nav[data-control=menu].icons > a:hover > .icon {
   -o-text-shadow: 0 0 2em #fff;
   text-shadow: 0 0 2em #fff;
 }
-nav[data-control=menu]:not(.icons) > a > .icon {
-  color: #595959;
-}
+nav[data-control=menu]:not(.icons) > a,
 nav[data-control=menu]:not(.icons) > a > abbr {
   color: #fff;
+}
+nav[data-control=menu]:not(.icons) > a > .icon {
+  color: #595959;
 }
 nav[data-control=menu]:not(.icons) > a:active,
 nav[data-control=menu]:not(.icons) > a:hover {
@@ -531,7 +533,7 @@ article .button.disabled {
  */
 form label,
 .form label {
-  color: #aaa;
+  color: #6d6d6d;
   font-weight: 300;
 }
 form fieldset,
